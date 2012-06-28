@@ -1,4 +1,6 @@
 import random
+from sys import argv
+from os import environ
 
 # Admin name(s) for certain commands
 # Usage:
@@ -73,3 +75,47 @@ def parsemsg(privmsg):
 # Difficulty: hard
 
     return ret			# Return the appropriate string
+
+
+def setConfig():
+    # This function will set the config values one of three ways
+    # Default values as a backup, if there are environment variables
+    # set those will be used, unless the first argument passed to lpmcbot.py
+    # is -i or --interactive, then the user will be prompted for the settings.
+
+    # Check if an argument was passed
+    mode = None
+    try:
+        mode = argv[1]
+    except IndexError:
+        pass
+
+    if mode == '-i' or mode == '--interactive':
+        # Prompt for values
+        print "Welcome to the LPMC Bot Interative startup.\n"
+        print "A few settings must be entered before we can start.\n"
+        NICK = raw_input("NICK: ")
+        USER = raw_input("USER: ")
+        REALNAME = NICK
+        CHANNEL = raw_input("CHANNEL: ")
+        print "Thank you. Starting up the bot.\n"
+
+    else:
+        try:
+            # Check for environment variables
+            NICK     = environ['NICK']
+            USER     = environ['USER']
+            REALNAME = environ['NICK']
+            CHANNEL  = environ['CHANNEL']
+            print "Initializing using environment variables.\n"
+
+        except KeyError:
+            # Fall back on defaults
+            NICK     = "LPMCBot"
+            USER     = "LPMCbot"
+            REALNAME = "LPMCBot"
+            CHANNEL  = "#LPMCBot"
+            print "Initializing using default values.\n"
+
+    return (NICK, USER, REALNAME, CHANNEL)
+

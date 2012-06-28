@@ -1,1 +1,16 @@
 This is an IRC bot written in Python. It is meant to be simple as a starting point so that LPMC learners can learn from it and add features/functionality.
+
+The bot can be started in a few ways:
+    - Interactive Mode
+        Start the bot with '-i' or '--interactive' and it will prompt for a few
+        settings.
+        EXAMPLE: 'python2 lpmcbot.py -i'
+
+    - Environment Variables
+        The settings can be passed to the bot by environment variables.
+        EXAMPLE:
+            'NICK="MyNick" USER="MyUser" CHANNEL="#MyChannel" python2 lpmcbot.py'
+
+    - Default Values
+        If no argument is passed and no environment variables are found, the bot
+        will use the default values.
