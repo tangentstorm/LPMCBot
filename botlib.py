@@ -6,7 +6,7 @@ from os import environ
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
-ADMINS = ("SlimTim10", "Z_Mass")
+ADMINS = ("SlimTim10", "Z_Mass", "intothev01d")
 
 def parsemsg(privmsg):
 # Split the received PRIVMSG message into two useful parts
@@ -38,6 +38,17 @@ def parsemsg(privmsg):
 
 # To-do: add a '!calc' command that evaluates basic mathematical expressions
 # Difficulty: easy
+        if cmd[0] == '!calc':
+            user_calc = cmd[1]
+            try:
+                user_calc = answer 
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :' + answer + '\n'
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Enter only numbers and valid mathematical operators (+ - * /)' + \
+                ' Example: !calc 3+5\n'
+
 
 # The '!insult' command prints out a randomly selected insult from a list.
         if cmd[0] == '!insult':
