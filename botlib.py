@@ -6,7 +6,7 @@ from os import environ
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
-ADMINS = ("SlimTim10", "Z_Mass")
+ADMINS = ["SlimTim10", "Z_Mass"]
 
 def parsemsg(privmsg):
 # Split the received PRIVMSG message into two useful parts
@@ -119,21 +119,27 @@ def setConfig():
         print "Thank you. Starting up the bot.\n"
 
     else:
-        try:
-            # Check for environment variables
-            NICK     = environ['NICK']
-            USER     = environ['USER']
-            REALNAME = environ['NICK']
-            CHANNEL  = environ['CHANNEL']
-            print "Initializing using environment variables.\n"
+        print "Were you trying to enter into the LPMC Bot Interactive startup?"
+        resp = raw_input("(Y/N): ")
+        if resp == 'Y':
+            print "Please use either the command '-i' or '--interactive.'"
+            exit(0)
+        else:
+            try:
+                # Check for environment variables
+                NICK     = environ['NICK']
+                USER     = environ['USER']
+                REALNAME = environ['NICK']
+                CHANNEL  = environ['CHANNEL']
+                print "Initializing using environment variables.\n"
 
-        except KeyError:
-            # Fall back on defaults
-            NICK     = "LPMCBot"
-            USER     = "LPMCbot"
-            REALNAME = "LPMCBot"
-            CHANNEL  = "#LPMCBot"
-            print "Initializing using default values.\n"
+            except KeyError:
+                # Fall back on defaults
+                NICK     = "LPMCBot"
+                USER     = "LPMCbot"
+                REALNAME = "LPMCBot"
+                CHANNEL  = "#LPMCBot"
+                print "Initializing using default values.\n"
 
     return (NICK, USER, REALNAME, CHANNEL)
 
