@@ -41,9 +41,8 @@ def parsemsg(privmsg):
         if cmd[0] == '!calc':
             user_calc = cmd[1]
             try:
-                user_calc = answer 
                 ret = 'PRIVMSG ' + info[2] + \
-                ' :' + answer + '\n'
+                ' :' + user_calc + '\n'
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Enter only numbers and valid mathematical operators (+ - * /)' + \
