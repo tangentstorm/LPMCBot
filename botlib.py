@@ -131,6 +131,9 @@ def setConfig():
                 USER     = environ['USER']
                 REALNAME = environ['NICK']
                 CHANNEL  = environ['CHANNEL']
+                # Add User to ADMINS list (to let User use '!die' command)
+                add_admin = raw_input("ADMIN: ")
+                ADMINS.append(add_admin)
                 print "Initializing using environment variables.\n"
 
             except KeyError:
@@ -139,6 +142,7 @@ def setConfig():
                 USER     = "LPMCbot"
                 REALNAME = "LPMCBot"
                 CHANNEL  = "#LPMCBot"
+                ADMIN = "LPMCBot"
                 print "Initializing using default values.\n"
 
     return (NICK, USER, REALNAME, CHANNEL)
