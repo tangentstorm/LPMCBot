@@ -36,8 +36,21 @@ def parsemsg(privmsg):
         if cmd[0] == '!die' and sender in ADMINS:
             ret = 'QUIT\n'
 
-# To-do: add a '!calc' command that evaluates basic mathematical expressions
-# Difficulty: easy
+# The '!calc' command evaluates basic mathematical expressions
+        if cmd[0] == '!calc':
+            #try evaluating user input
+            try:
+                #exlude __builtins__ to prevent access to globals that aren't needed
+                #To-do: add a dictionary of globals acceptable to use with the calc command (sin, cos, abs, etc.) 
+                user_input = eval(cmd[1],{"__builtins__":None},{})
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :' + str(user_input) + '\n'
+            #throws exception on garbage input
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Enter only numbers and valid mathematical operators (+ - * /)' + \
+                ' Example: !calc 2+2\n'
+
 
 # The '!insult' command prints out a randomly selected insult from a list.
         if cmd[0] == '!insult':
