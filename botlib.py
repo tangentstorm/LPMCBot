@@ -6,7 +6,7 @@ from os import environ
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
-ADMINS = ["SlimTim10", "Z_Mass"]
+ADMINS = ["SlimTim10", "Z_Mass", "intothev01d"]
 
 def parsemsg(privmsg):
 # Split the received PRIVMSG message into two useful parts
@@ -38,18 +38,28 @@ def parsemsg(privmsg):
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
+            #import functions from math module
+            from math import *
             #try evaluating user input
             try:
-                #exlude __builtins__ to prevent access to globals that aren't needed
-                #To-do: add a dictionary of globals acceptable to use with the calc command (sin, cos, abs, etc.) 
-                user_input = eval(cmd[1],{"__builtins__":None},{})
-                ret = 'PRIVMSG ' + info[2] + \
-                ' :' + str(user_input) + '\n'
+                #exlude __builtins__ to prevent access to globals that aren't needed and create dictionary of all math functions from the math module
+                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos, 'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil, 'copysign':copysign, 'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e, 'exp':exp, 'expm1':expm1, 'erf':erf, 'erfc':erfc, 'fabs':fabs, 'factorial':factorial, 'floor':floor, 'fmod':fmod, 'frexp':frexp, 'fsum':fsum, 'gamma':gamma, 'hypot':hypot, 'isinf':isinf, 'isnan':isnan, 'ldexp':ldexp, 'lgamma':lgamma, 'log':log, 'log1p':log1p, 'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow, 'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt, 'tan':tan, 'tanh':tanh, 'trunc':trunc}
+                #if command is !calc math print list of available math functions
+                if cmd[1] == 'math':
+                    import pprint
+                    ret = 'PRIVMSG ' + info[2] + \
+                    ' :' + str(safe_dict.keys()) + '\n'
+                #otherwise evaluate user input while passing in safe globals dictionary and no locals
+                else:
+                    user_input = eval(cmd[1],safe_dict,{})
+                    ret = 'PRIVMSG ' + info[2] + \
+                    ' :' + str(user_input) + '\n'
             #throws exception on garbage input
             except:
                 ret = 'PRIVMSG ' + info[2] + \
-                ' :Command help: Enter only numbers and valid mathematical operators (+ - * /)' + \
-                ' Example: !calc 2+2\n'
+                ' :Command help: Enter only numbers and valid mathematical functions ' + \
+                ' Example: !calc 2+2 or !calc abs(-2) ' + \
+                ' For a list of available math fuctions use !calc math\n'
 
 
 # The '!insult' command prints out a randomly selected insult from a list.
