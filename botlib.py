@@ -40,8 +40,8 @@ def parsemsg(privmsg):
         if cmd[0] == '!calc':
             #try evaluating user input
             try:
-                #eliminate built in functions to prevent malicious code
-                #To-do: add a dictionary of locals acceptable to use with the calc command (sin, cos, abs, etc.) 
+                #exlude __builtins__ to prevent access to globals that aren't needed
+                #To-do: add a dictionary of globals acceptable to use with the calc command (sin, cos, abs, etc.) 
                 user_input = eval(cmd[1],{"__builtins__":None},{})
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :' + str(user_input) + '\n'
