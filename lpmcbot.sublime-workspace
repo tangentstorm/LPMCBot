@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"saf",
+				"safe_dict"
+			],
+			[
+				"mat",
+				"math"
+			],
+			[
+				"user",
+				"user_calc"
+			],
+			[
 				"mar",
 				"margin"
 			],
@@ -51,6 +63,22 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "lpmcbot.py",
+			"settings":
+			{
+				"buffer_size": 2084,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "botlib.py",
+			"settings":
+			{
+				"buffer_size": 6173,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -92,6 +120,7 @@
 	},
 	"file_history":
 	[
+		"/Users/Lance/Development/github/LPMCBot/lpmcbot.py",
 		"/Users/Lance/Development/github/LPMCBot/botlib.py",
 		"/Users/Lance/Development/github/intothev01d/LPMCBot/botlib.py",
 		"/Users/Lance/Development/github/intothev01d/LPMCBot/lpmcbot.py",
@@ -220,8 +249,69 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "lpmcbot.py",
+					"settings":
+					{
+						"buffer_size": 2084,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "botlib.py",
+					"settings":
+					{
+						"buffer_size": 6173,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
