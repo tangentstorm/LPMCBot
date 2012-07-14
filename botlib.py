@@ -116,34 +116,27 @@ def setConfig():
         USER = raw_input("USER: ")
         REALNAME = NICK
         CHANNEL = raw_input("CHANNEL: ")
+        # Add User to ADMINS list (to let User use '!die' command)
+        add_admin = raw_input("ADMIN: ")
+        ADMINS.append(add_admin)
         print "Thank you. Starting up the bot.\n"
 
     else:
-        print "Were you trying to enter into the LPMC Bot Interactive startup?"
-        resp = raw_input("(Y/N): ")
-        if resp == 'Y':
-            print "Please use either the command '-i' or '--interactive.'"
-            exit(0)
-        else:
-            try:
-                # Check for environment variables
-                NICK     = environ['NICK']
-                USER     = environ['USER']
-                REALNAME = environ['NICK']
-                CHANNEL  = environ['CHANNEL']
-                # Add User to ADMINS list (to let User use '!die' command)
-                add_admin = raw_input("ADMIN: ")
-                ADMINS.append(add_admin)
-                print "Initializing using environment variables.\n"
+        try:
+            # Check for environment variables
+            NICK     = environ['NICK']
+            USER     = environ['USER']
+            REALNAME = environ['NICK']
+            CHANNEL  = environ['CHANNEL']
+            print "Initializing using environment variables.\n"
 
-            except KeyError:
-                # Fall back on defaults
-                NICK     = "LPMCBot"
-                USER     = "LPMCbot"
-                REALNAME = "LPMCBot"
-                CHANNEL  = "#LPMCBot"
-                ADMIN = "LPMCBot"
-                print "Initializing using default values.\n"
+        except KeyError:
+            # Fall back on defaults
+            NICK     = "LPMCBot"
+            USER     = "LPMCbot"
+            REALNAME = "LPMCBot"
+            CHANNEL  = "#LPMCBot"
+            print "Initializing using default values.\n"
 
     return (NICK, USER, REALNAME, CHANNEL)
 
