@@ -46,7 +46,6 @@ def parsemsg(privmsg):
                 safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos, 'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil, 'copysign':copysign, 'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e, 'exp':exp, 'expm1':expm1, 'erf':erf, 'erfc':erfc, 'fabs':fabs, 'factorial':factorial, 'floor':floor, 'fmod':fmod, 'frexp':frexp, 'fsum':fsum, 'gamma':gamma, 'hypot':hypot, 'isinf':isinf, 'isnan':isnan, 'ldexp':ldexp, 'lgamma':lgamma, 'log':log, 'log1p':log1p, 'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow, 'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt, 'tan':tan, 'tanh':tanh, 'trunc':trunc}
                 #if command is !calc math print list of available math functions
                 if cmd[1] == 'math':
-                    import pprint
                     ret = 'PRIVMSG ' + info[2] + \
                     ' :' + str(safe_dict.keys()) + '\n'
                 #otherwise evaluate user input while passing in safe globals dictionary and no locals
