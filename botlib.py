@@ -38,13 +38,11 @@ def parsemsg(privmsg):
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
-            #make a list of safe functions
-            safe_list = ['math', 'acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'cosh', 'degrees', 'e', 'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot', 'ldexp', 'log', 'log10', 'modf', 'pi', 'pow', 'radians', 'sin', 'sinh', 'sqrt', 'tan', 'tanh']
-            #use the list to filter the local namespace
-            safe_dict = dict([ (k, locals().get(k, None)) for k in safe_list ])
             #try evaluating user input
             try:
-                user_input = eval(cmd[1],{"__builtins__":None},safe_dict)
+                #eliminate built in functions to prevent malicious code
+                #To-do: add a dictionary of locals acceptable to use with the calc command (sin, cos, abs, etc.) 
+                user_input = eval(cmd[1],{"__builtins__":None},{})
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :' + str(user_input) + '\n'
             #throws exception on garbage input
