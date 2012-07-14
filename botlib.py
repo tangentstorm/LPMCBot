@@ -6,7 +6,7 @@ from os import environ
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
-ADMINS = ("SlimTim10", "Z_Mass", "intothev01d")
+ADMINS = ["SlimTim10", "Z_Mass"]
 
 def parsemsg(privmsg):
 # Split the received PRIVMSG message into two useful parts
@@ -129,6 +129,9 @@ def setConfig():
         USER = raw_input("USER: ")
         REALNAME = NICK
         CHANNEL = raw_input("CHANNEL: ")
+        # Add User to ADMINS list (to let User use '!die' command)
+        add_admin = raw_input("ADMIN: ")
+        ADMINS.append(add_admin)
         print "Thank you. Starting up the bot.\n"
 
     else:
