@@ -83,16 +83,16 @@ def parsemsg(privmsg):
             # Return the insult at index 'choice'
             ret = 'PRIVMSG ' + info[2] + ' :' + insults[choice] + '\n'
 
-# To-do: find and fix the bug
 # To-do: add helpful comments to this command's code
+# The !rps command initializes a game of rock-paper-scissors. 
         if cmd[0] == '!rps':
             try:
                 user_rps = int(cmd[1])
-                if user_rps < 0 or user_rps > 3:
+                if user_rps < 0 or user_rps > 2:
                     raise Exception("Invalid")
                 else:
                     rps_names = ['rock', 'paper', 'scissors']
-                    bot_rps = random.randint(0, 3)
+                    bot_rps = random.randint(0, 2)
                     ret = 'PRIVMSG ' + info[2] + ' :Player chose ' + \
                     rps_names[user_rps] + '. LPMCBot chose ' + \
                     rps_names[bot_rps] + '. '
@@ -106,7 +106,7 @@ def parsemsg(privmsg):
                             ret += 'Player loses.\n'
             except:
                 ret = 'PRIVMSG ' + info[2] + \
-                ' :Command help: 0 = Rock, 1 = Paper, 3 = Scissors. ' + \
+                ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
                 'Example: !rps 1\n'
 
 

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 This is an IRC bot written in Python. It is meant to be simple as a starting point so that LPMC learners can learn from it and add features/functionality.
 
 The bot can be started in a few ways:
@@ -15,6 +14,3 @@ The bot can be started in a few ways:
     - Default Values
         If no argument is passed and no environment variables are found, the bot
         will use the default values.
-=======
-All that's missing is the fork. Heh.
->>>>>>> upstream/master
