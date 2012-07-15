@@ -43,7 +43,8 @@ def parsemsg(privmsg):
             #try evaluating user input
             try:
                 #exlude __builtins__ to prevent access to globals that aren't needed and create dictionary of all math functions from the math module
-                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos, 'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil, 'copysign':copysign, 'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e, 'exp':exp, 'expm1':expm1, 'erf':erf, 'erfc':erfc, 'fabs':fabs, 'factorial':factorial, 'floor':floor, 'fmod':fmod, 'frexp':frexp, 'fsum':fsum, 'gamma':gamma, 'hypot':hypot, 'isinf':isinf, 'isnan':isnan, 'ldexp':ldexp, 'lgamma':lgamma, 'log':log, 'log1p':log1p, 'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow, 'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt, 'tan':tan, 'tanh':tanh, 'trunc':trunc}
+                #functions compatible from 2.5.2 and up
+                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos, 'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil,'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e, 'exp':exp, 'fabs':fabs, 'floor':floor, 'fmod':fmod, 'frexp':frexp, 'hypot':hypot, 'ldexp':ldexp, 'log':log, 'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow, 'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt, 'tan':tan, 'tanh':tanh}
                 #if command is !calc math print list of available math functions
                 if cmd[1] == 'math':
                     ret = 'PRIVMSG ' + info[2] + \
