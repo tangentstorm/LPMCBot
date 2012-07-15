@@ -7,6 +7,3 @@
 # Ignore Mac OSX files
 .DS_Store
 
-# Ignore Sublime Text 2 files
-*.sublime-project
-*.sublime-workspace
