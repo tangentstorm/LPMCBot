@@ -20,17 +20,20 @@ def parsemsg(privmsg):
     sender = info[0].split('!')[0]
 # The string to be returned
     ret = ''
-
 # Treat messages starting with '!' as commands (e.g., "!say hi")
     if msg[0] == '!':
 # Split command message into two parts: bot command and following text
         cmd = msg.split(' ', 1)
 
 # The '!say' command makes the bot say something
-# To-do: make this command work for private messages sent directly to the bot
         if cmd[0] == '!say':
+            # Bot will respond to !say command via private message if
+            # privmsg is not "PRIVMSG + #channel + cmd"
+            if info[2][0] != '#':
+                ret = 'PRIVMSG ' + sender + ' :' + cmd[1] + '\n'
 # Send the message to where the '!say' command was sent
-            ret = 'PRIVMSG ' + info[2] + ' :' + cmd[1] + '\n'
+            else:
+                ret = 'PRIVMSG ' + info[2] + ' :' + cmd[1] + '\n'
 
 # The '!die' command makes the bot quit (admin command)
         if cmd[0] == '!die' and sender in ADMINS:
@@ -114,7 +117,6 @@ def parsemsg(privmsg):
 # To-do: add a '!ttt' command that starts a game of Tic Tac Toe to be played
 # 	against the bot
 # Difficulty: hard
-
     return ret			# Return the appropriate string
 
 
