@@ -6,7 +6,11 @@ from os import environ
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
-ADMINS = ["SlimTim10", "Z_Mass", "intothev01d"]
+<<<<<<< HEAD
+ADMINS = ["SlimTim10", "Z_Mass"]
+=======
+ADMINS = ("SlimTim10", "Z_Mass", "intothev01d")
+>>>>>>> origin/master
 
 def parsemsg(privmsg):
 # Split the received PRIVMSG message into two useful parts
@@ -20,20 +24,17 @@ def parsemsg(privmsg):
     sender = info[0].split('!')[0]
 # The string to be returned
     ret = ''
+
 # Treat messages starting with '!' as commands (e.g., "!say hi")
     if msg[0] == '!':
 # Split command message into two parts: bot command and following text
         cmd = msg.split(' ', 1)
 
 # The '!say' command makes the bot say something
+# To-do: make this command work for private messages sent directly to the bot
         if cmd[0] == '!say':
-            # Bot will respond to !say command via private message if
-            # privmsg is not "PRIVMSG + #channel + cmd"
-            if info[2][0] != '#':
-                ret = 'PRIVMSG ' + sender + ' :' + cmd[1] + '\n'
 # Send the message to where the '!say' command was sent
-            else:
-                ret = 'PRIVMSG ' + info[2] + ' :' + cmd[1] + '\n'
+            ret = 'PRIVMSG ' + info[2] + ' :' + cmd[1] + '\n'
 
 # The '!die' command makes the bot quit (admin command)
         if cmd[0] == '!die' and sender in ADMINS:
@@ -41,28 +42,18 @@ def parsemsg(privmsg):
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
-            #import functions from math module
-            from math import *
             #try evaluating user input
             try:
-                #exlude __builtins__ to prevent access to globals that aren't needed and create dictionary of all math functions from the math module
-                #functions compatible from 2.5.2 and up
-                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos, 'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil,'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e, 'exp':exp, 'fabs':fabs, 'floor':floor, 'fmod':fmod, 'frexp':frexp, 'hypot':hypot, 'ldexp':ldexp, 'log':log, 'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow, 'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt, 'tan':tan, 'tanh':tanh}
-                #if command is !calc math print list of available math functions
-                if cmd[1] == 'math':
-                    ret = 'PRIVMSG ' + info[2] + \
-                    ' :' + str(safe_dict.keys()) + '\n'
-                #otherwise evaluate user input while passing in safe globals dictionary and no locals
-                else:
-                    user_input = eval(cmd[1],safe_dict,{})
-                    ret = 'PRIVMSG ' + info[2] + \
-                    ' :' + str(user_input) + '\n'
+                #exlude __builtins__ to prevent access to globals that aren't needed
+                #To-do: add a dictionary of globals acceptable to use with the calc command (sin, cos, abs, etc.) 
+                user_input = eval(cmd[1],{"__builtins__":None},{})
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :' + str(user_input) + '\n'
             #throws exception on garbage input
             except:
                 ret = 'PRIVMSG ' + info[2] + \
-                ' :Command help: Enter only numbers and valid mathematical functions ' + \
-                ' Example: !calc 2+2 or !calc abs(-2) ' + \
-                ' For a list of available math fuctions use !calc math\n'
+                ' :Command help: Enter only numbers and valid mathematical operators (+ - * /)' + \
+                ' Example: !calc 2+2\n'
 
 
 # The '!insult' command prints out a randomly selected insult from a list.
@@ -87,16 +78,16 @@ def parsemsg(privmsg):
             # Return the insult at index 'choice'
             ret = 'PRIVMSG ' + info[2] + ' :' + insults[choice] + '\n'
 
+# To-do: find and fix the bug
 # To-do: add helpful comments to this command's code
-# The !rps command initializes a game of rock-paper-scissors. 
         if cmd[0] == '!rps':
             try:
                 user_rps = int(cmd[1])
-                if user_rps < 0 or user_rps > 2:
+                if user_rps < 0 or user_rps > 3:
                     raise Exception("Invalid")
                 else:
                     rps_names = ['rock', 'paper', 'scissors']
-                    bot_rps = random.randint(0, 2)
+                    bot_rps = random.randint(0, 3)
                     ret = 'PRIVMSG ' + info[2] + ' :Player chose ' + \
                     rps_names[user_rps] + '. LPMCBot chose ' + \
                     rps_names[bot_rps] + '. '
@@ -110,13 +101,14 @@ def parsemsg(privmsg):
                             ret += 'Player loses.\n'
             except:
                 ret = 'PRIVMSG ' + info[2] + \
-                ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
+                ' :Command help: 0 = Rock, 1 = Paper, 3 = Scissors. ' + \
                 'Example: !rps 1\n'
 
 
 # To-do: add a '!ttt' command that starts a game of Tic Tac Toe to be played
 # 	against the bot
 # Difficulty: hard
+
     return ret			# Return the appropriate string
 
 
