@@ -1,6 +1,7 @@
 import random
 from sys import argv
 from os import environ
+from math import *
 
 # Admin name(s) for certain commands
 # Usage:
@@ -41,23 +42,30 @@ def parsemsg(privmsg):
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
-            #import functions from math module
-            from math import *
             #try evaluating user input
             try:
-                #exlude __builtins__ to prevent access to globals that aren't needed and create dictionary of all math functions from the math module
-                #functions compatible from 2.5.2 and up
-                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos, 'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil,'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e, 'exp':exp, 'fabs':fabs, 'floor':floor, 'fmod':fmod, 'frexp':frexp, 'hypot':hypot, 'ldexp':ldexp, 'log':log, 'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow, 'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt, 'tan':tan, 'tanh':tanh}
-                #if command is !calc math print list of available math functions
+                # exlude __builtins__ to prevent access to globals that aren't
+                # needed and create dictionary of all math functions from the math module
+                # functions compatible from 2.5.2 and up
+                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos,
+                            'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil,
+                            'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e,
+                            'exp':exp, 'fabs':fabs, 'floor':floor, 'fmod':fmod,
+                            'frexp':frexp, 'hypot':hypot, 'ldexp':ldexp, 'log':log,
+                            'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow,
+                            'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt,
+                            'tan':tan, 'tanh':tanh}
+                # if command is !calc math print list of available math functions
                 if cmd[1] == 'math':
                     ret = 'PRIVMSG ' + info[2] + \
                     ' :' + str(safe_dict.keys()) + '\n'
-                #otherwise evaluate user input while passing in safe globals dictionary and no locals
+                # otherwise evaluate user input while passing in safe globals
+                # dictionary and no locals
                 else:
                     user_input = eval(cmd[1],safe_dict,{})
                     ret = 'PRIVMSG ' + info[2] + \
                     ' :' + str(user_input) + '\n'
-            #throws exception on garbage input
+            # throws exception on garbage input
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Enter only numbers and valid mathematical functions ' + \
@@ -79,16 +87,16 @@ def parsemsg(privmsg):
                        "So what, wanna fight about it?",
                        "I fart in your general direction.",
                        "Your mother was a hamster and your father smelt of elderberries.")
-            
+
             # Initialize the random number generator with current system time
             random.seed(None)
-            # Pick a random number within range of insults tupple 
+            # Pick a random number within range of insults tupple
             choice = random.randint(0, len(insults) - 1)
             # Return the insult at index 'choice'
             ret = 'PRIVMSG ' + info[2] + ' :' + insults[choice] + '\n'
 
 # To-do: add helpful comments to this command's code
-# The !rps command initializes a game of rock-paper-scissors. 
+# The !rps command initializes a game of rock-paper-scissors.
         if cmd[0] == '!rps':
             try:
                 user_rps = int(cmd[1])
@@ -121,6 +129,7 @@ def parsemsg(privmsg):
 
 
 def setConfig():
+    """Return a dict containing bot config values."""
     # This function will set the config values one of three ways
     # Default values as a backup, if there are environment variables
     # set those will be used, unless the first argument passed to lpmcbot.py
@@ -163,5 +172,9 @@ def setConfig():
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
 
-    return (NICK, USER, REALNAME, CHANNEL)
+    config_values = {'NICK': NICK,
+                     'USER': USER,
+                     'REALNAME': REALNAME,
+                     'CHANNEL': CHANNEL}
+    return config_values
 
