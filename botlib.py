@@ -136,13 +136,17 @@ def setConfig():
     # is -i or --interactive, then the user will be prompted for the settings.
 
     # Check if an argument was passed
-    mode = None
+    flags = None
     try:
-        mode = argv[1]
+        # If first char is -, assume it is a group of flags, ex '-il'
+        if argv[1][0] == '-':
+            # Remove the '-'
+            flags = argv[1][1:]
     except IndexError:
         pass
 
-    if mode == '-i' or mode == '--interactive':
+    # -- Startup settings --
+    if 'i' in flags or '--interactive' in argv:
         # Prompt for values
         print "Welcome to the LPMC Bot Interative startup.\n"
         print "A few settings must be entered before we can start.\n"
@@ -154,7 +158,6 @@ def setConfig():
         add_admin = raw_input("ADMIN: ")
         ADMINS.append(add_admin)
         print "Thank you. Starting up the bot.\n"
-
     else:
         try:
             # Check for environment variables
@@ -172,9 +175,20 @@ def setConfig():
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
 
+    # -- Logging settings --
+    if 'l' in flags or '--log' in argv:
+        LOG = True
+    else:
+        try:
+            # Check for LOG env var seperate from essential settings
+            LOG = environ['LOG']
+        except KeyError:
+            LOG = False
+
     config_values = {'NICK': NICK,
                      'USER': USER,
                      'REALNAME': REALNAME,
-                     'CHANNEL': CHANNEL}
+                     'CHANNEL': CHANNEL,
+                     'LOG': LOG}
     return config_values
 
