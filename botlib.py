@@ -74,7 +74,7 @@ def parsemsg(privmsg):
                        "What are you? An idiot!?",
                        "I know where you live..",
                        "You cur!",
-                       "You insolent cad!"
+                       "You insolent cad!",
                        "I challenge you to a duel at dawn!",
                        "So what, wanna fight about it?",
                        "I fart in your general direction.",
