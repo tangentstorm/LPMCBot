@@ -17,8 +17,13 @@ REALNAME   = settings['REALNAME']  # The real name of the bot
 CHANNEL    = settings['CHANNEL']   # The default channel for the bot
 readbuffer = ''                 # Used to store incoming messages from the server
 
-s = socket.socket()             # Create the socket
-s.connect((HOST, PORT))         # Connect to the server
+# Plugins
+LOG = settings['LOG']           # Is logging enabled? (True or False)
+
+# Create the socket
+s = socket.socket()
+# Connect to the server
+s.connect((HOST, PORT))
 
 # Identify to the server
 # Command: USER
