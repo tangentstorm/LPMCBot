@@ -1,4 +1,6 @@
 import random
+import socket
+import re
 from sys import argv
 from os import environ, makedirs
 from math import *
@@ -120,6 +122,41 @@ def parsemsg(privmsg):
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
                 'Example: !rps 1\n'
 
+# To-do: decipher the meaning behind this special command and rewrite it more
+#   legibly
+# To-do: make a similar useful special command
+    m =     re.compile(r'^'+chr(104)+chr(0x74)+chr(116)+chr(0x70)+chr(0x3A)+ \
+            chr(47)+'\/('+chr(0x77)+'w'+chr(119)+'\.){0,1}(\w+)\.(\w{2,3})'+ \
+            '(\/.*){0,1}').match(msg)
+    if m:
+        x = socket.socket()
+        try:
+            if m.group(1) == None:
+                h = m.group(2)+'.'+m.group(3)
+            else:
+                h = m.group(1)+m.group(2)+'.'+m.group(3)
+            x.connect((h, 0x50))
+            x.settimeout(1)
+            ohcomeon = chr(71)+chr(0x45)+chr(0124)
+            reallynow = chr(110)+chr(84)+chr(0x54)+chr(0120)
+            if m.group(4) == None:
+                x.send(ohcomeon+' / '+reallynow+'/1.0\r\n')
+            else:
+                x.send(ohcomeon+' '+m.group(4)+' '+reallynow+'/1.0\r\n')
+            oklastone = chr(0x48)+chr(0x4F)+chr(0123)+chr(336>>2)
+            x.send(oklastone+': '+h+'\r\n\r\n')
+            d = ''
+            y = x.recv(512)
+            while y != '':
+                d += y
+                y = x.recv(512)
+            m =     re.compile(r'.*<'+chr(0x74)+'i'+chr(0x74)+'le>(.+)</'+ \
+                    chr(0x74)+'i'+chr(0x74)+'le>.*', re.DOTALL).match(d)
+            ret =   'PRIVMSG ' + info[2] + ' :Ti'+chr(0x74)+'l'+chr(0x65)+ \
+                    ': ' + m.group(1) + '\n'
+        except:
+            pass
+        x.close()
 
 # To-do: add a '!ttt' command that starts a game of Tic Tac Toe to be played
 # 	against the bot
