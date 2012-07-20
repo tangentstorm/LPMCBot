@@ -111,12 +111,10 @@ def parsemsg(privmsg):
                     rps_names[bot_rps] + '. '
                     if user_rps == bot_rps:
                         ret += 'Tie game.\n'
+                    elif user_rps == (bot_rps + 1) % 3:
+                        ret += 'Player wins!\n'
                     else:
-                        result = user_rps - bot_rps
-                        if result == -2 or result == 1:
-                            ret += 'Player wins!\n'
-                        else:
-                            ret += 'Player loses.\n'
+                        ret += 'Player loses.\n'
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
