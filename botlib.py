@@ -1,7 +1,8 @@
 import random
 from sys import argv
-from os import environ
+from os import environ, makedirs
 from math import *
+from time import strftime
 
 # Admin name(s) for certain commands
 # Usage:
@@ -136,13 +137,21 @@ def setConfig():
     # is -i or --interactive, then the user will be prompted for the settings.
 
     # Check if an argument was passed
-    mode = None
+    flags = ''
+    long_args = ''
     try:
-        mode = argv[1]
+        # If first char is -, assume it is a group of flags, ex: '-il'
+        if argv[1][0] == '-' and argv[1][1] != '-':
+            # Remove the '-'
+            flags = argv[1][1:]
+        # Is the first arg a long arg? ex: '--log'
+        elif argv[1][:2] == '--':
+            long_args = argv
     except IndexError:
         pass
 
-    if mode == '-i' or mode == '--interactive':
+    # -- Startup settings --
+    if 'i' in flags or '--interactive' in long_args:
         # Prompt for values
         print "Welcome to the LPMC Bot Interative startup.\n"
         print "A few settings must be entered before we can start.\n"
@@ -154,7 +163,6 @@ def setConfig():
         add_admin = raw_input("ADMIN: ")
         ADMINS.append(add_admin)
         print "Thank you. Starting up the bot.\n"
-
     else:
         try:
             # Check for environment variables
@@ -172,9 +180,58 @@ def setConfig():
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
 
+    # -- Logging settings --
+    if 'l' in flags or '--log' in long_args:
+        LOG = True
+    else:
+        try:
+            # Check for LOG env var seperate from essential settings
+            LOG = environ['LOG']
+        except KeyError:
+            LOG = False
+
     config_values = {'NICK': NICK,
                      'USER': USER,
                      'REALNAME': REALNAME,
-                     'CHANNEL': CHANNEL}
+                     'CHANNEL': CHANNEL,
+                     'LOG': LOG}
     return config_values
 
+
+# -- Logging functions --
+
+def open_log_file(channel):
+    # Make sure the log_files dir exists
+    try:
+        makedirs('log_files')
+    except OSError as e:
+        if e.errno == 17:
+            # The dir already exists
+            pass
+        else:
+            raise e
+    # Create path to file using channel (without '#')
+    log_file = 'log_files/%s.log' % channel[1:]
+    # Open file and return it
+    x = open(log_file, 'a')
+    return x
+
+def log_event(privmsg, log_file):
+    """Log an event to current channel's log file."""
+    # Extract the info from the privmsg
+    parts = privmsg[1:].split(':', 1)
+    info = parts[0].split(' ')
+    msg = parts[1].rstrip()
+    sender = info[0].split('!')[0]
+    # Create a timestamp, example format: '02:45 PM |'
+    timestamp = strftime('%I:%M %p |\t')
+    # Avoid logging garbage
+    if 'PREFIX=(ov)@+' in msg:
+        pass
+    else:
+        log_file.write(timestamp + sender + '\t' + msg + '\n')
+
+def end_log_session(log_file):
+    """Delimit each log session and close file."""
+    log_file.write('\n***** ***** *****\n\n')
+    log_file.close()

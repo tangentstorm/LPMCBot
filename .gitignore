@@ -7,3 +7,5 @@
 # Ignore Mac OSX files
 .DS_Store
 
+# Ignore log file directory
+log_files/

@@ -17,8 +17,17 @@ REALNAME   = settings['REALNAME']  # The real name of the bot
 CHANNEL    = settings['CHANNEL']   # The default channel for the bot
 readbuffer = ''                 # Used to store incoming messages from the server
 
-s = socket.socket()             # Create the socket
-s.connect((HOST, PORT))         # Connect to the server
+# Plugin Settings
+LOG = settings['LOG']           # Is logging enabled? (True or False)
+
+# Enable Plugins as required
+if LOG:
+    log_file = open_log_file(CHANNEL)
+
+# Create the socket
+s = socket.socket()
+# Connect to the server
+s.connect((HOST, PORT))
 
 # Identify to the server
 # Command: USER
@@ -42,11 +51,17 @@ while True:
 
 # Handle a private message
     if 'PRIVMSG' in line:
-# Use the message parsing function
+        # If enabled, log messages
+        if LOG:
+            log_event(line, log_file)
+        # Use the message parsing function
         send_msg = parsemsg(line)
         s.send(send_msg)
+
         if send_msg == 'QUIT\n':
             print "QUITTING"
+            if LOG:
+                end_log_session(log_file)
             break
 
 # Handle a PING from the server
