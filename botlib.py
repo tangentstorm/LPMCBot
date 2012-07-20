@@ -117,8 +117,7 @@ def parsemsg(privmsg):
                 'Example: !rps 1\n'
 
 
-# To-do: add a '!ttt' command that starts a game of Tic Tac Toe to be played
-# 	against the bot
+# To-do: add A.I. for the bot rather than random picking
 # Difficulty: hard
 	if cmd[0] == '!ttt':
 	    winner = 0
@@ -128,11 +127,11 @@ def parsemsg(privmsg):
                     raise Exception("Invalid")
 
 		availableSpaces = []
-		for i in range(min(len(TICTACTOE),9)):
-			if (TICTACTOE[i] == '_'):
+		for i in range(min(len(TICTACTOE),9)):      #this checks for open spaces 
+			if (TICTACTOE[i] == '_'):           #it's run after every cmd
 				availableSpaces.append(i+1)
 
-		if (user_ttt == 0):
+		if (user_ttt == 0):                         #this initializes the board
 		    for i in range(len(TICTACTOE)):
 			TICTACTOE.pop(0)
 		    for i in range(9):
@@ -141,17 +140,19 @@ def parsemsg(privmsg):
 		    ' :' + 'New Game started! To play, type !ttt followed ' + \
 			'by a number. Example: "!ttt 3" for top right corner.' + '\n' 
 
-		elif user_ttt in availableSpaces:
+		elif user_ttt in availableSpaces:       #this handles the player's move 
 		    TICTACTOE[user_ttt - 1] = 'O'
 		    availableSpaces.remove(user_ttt)
 		    ret = 'PRIVMSG ' + info[2] + ' :' 
 		    for i in range(9):
 			ret = ret + TICTACTOE[i] + ' '
 			if (i % 3 == 2 and i > 0):
-				ret = ret + '| '
-				#ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :'
-		    ret = ret + '\n'
-		    if (len(availableSpaces)):
+							#for one line rather than three
+				#ret = ret + '| '       #uncomment this line and comment 
+							#the line underneath this one.
+				ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
+		    ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' : ### \n' 
+		    if (len(availableSpaces)):          #the following handles bot's move
 			    botRandPick = random.randint(0,len(availableSpaces)-1)	
 			    TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
 			    availableSpaces.remove(availableSpaces[botRandPick])
@@ -159,13 +160,16 @@ def parsemsg(privmsg):
 			    for i in range(9):
 				ret = ret + TICTACTOE[i] + ' '
 				if (i % 3 == 2 and i > 0):
-					ret = ret + '| '
-					#ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :'
+								#for one line rather than three
+					#ret = ret + '| '       #uncomment this line and comment 
+								#the line underneath this one.
+					ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
 			    ret = ret + '\n'
 
 		else:
 		    ret = 'PRIVMSG ' + info[2] + ' : Space is already taken.' + '\n' 
 
+		#the following checks for win conditions and sets the winner variable
 		if (TICTACTOE[0] == TICTACTOE[1] == TICTACTOE[2]):winner = TICTACTOE[0] 
 		if (TICTACTOE[3] == TICTACTOE[4] == TICTACTOE[5]):winner = TICTACTOE[3] 
 		if (TICTACTOE[6] == TICTACTOE[7] == TICTACTOE[8]):winner = TICTACTOE[6] 
@@ -226,7 +230,7 @@ def setConfig():
             NICK     = "LPMCBot"
             USER     = "LPMCbot"
             REALNAME = "LPMCBot"
-            CHANNEL  = "#fact-bot"
+            CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
 
     return (NICK, USER, REALNAME, CHANNEL)
