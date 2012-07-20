@@ -7,6 +7,9 @@ from os import environ
 #       if sender in ADMINS:
 #           myfunc()
 ADMINS = ["SlimTim10", "Z_Mass", "intothev01d"]
+TICTACTOE = []
+
+
 
 def parsemsg(privmsg):
 # Split the received PRIVMSG message into two useful parts
@@ -117,6 +120,37 @@ def parsemsg(privmsg):
 # To-do: add a '!ttt' command that starts a game of Tic Tac Toe to be played
 # 	against the bot
 # Difficulty: hard
+	if cmd[0] == '!ttt':
+	    try:
+                user_ttt = int(cmd[1])
+                if user_ttt < 0 or user_ttt > 9:
+                    raise Exception("Invalid")
+		availableSpaces = []
+		for i in range(min(len(TICTACTOE),9)):
+			if (TICTACTOE[i] == '_'):
+				availableSpaces.append(i+1)
+		if (user_ttt == 0):
+		    for i in range(len(TICTACTOE)):
+			TICTACTOE.pop(0)
+		    for i in range(9):
+			TICTACTOE.append('_')
+		    ret = 'PRIVMSG ' + info[2] + \
+		    ' :' + 'New Game started! To play, type !ttt followed ' + \
+			'by a number. Example: "!ttt 3" for top right corner.' + '\n' 
+		elif user_ttt in availableSpaces:
+		    TICTACTOE[user_ttt - 1] = 'O'
+		    ret = 'PRIVMSG ' + info[2] + ' :' 
+		    for i in range(9):
+			ret = ret + TICTACTOE[i] + ' '
+		    ret = ret + '\n'
+		else:
+		    ret = 'PRIVMSG ' + info[2] + ' : Space is already taken.' + '\n' 
+		print availableSpaces
+	    except:
+		#How-To stuff
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Tic-Tac-Toe. ' + \
+                'To start a new game: !ttt 0\n'
     return ret			# Return the appropriate string
 
 
@@ -160,7 +194,7 @@ def setConfig():
             NICK     = "LPMCBot"
             USER     = "LPMCbot"
             REALNAME = "LPMCBot"
-            CHANNEL  = "#LPMCBot"
+            CHANNEL  = "#fact-bot"
             print "Initializing using default values.\n"
 
     return (NICK, USER, REALNAME, CHANNEL)
