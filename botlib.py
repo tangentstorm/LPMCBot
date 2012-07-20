@@ -141,11 +141,11 @@ def setConfig():
     long_args = ''
     try:
         # If first char is -, assume it is a group of flags, ex: '-il'
-        if argv[1][0] is '-' and argv[1][1] is not '-':
+        if argv[1][0] == '-' and argv[1][1] != '-':
             # Remove the '-'
             flags = argv[1][1:]
         # Is the first arg a long arg? ex: '--log'
-        elif argv[1][:2]:
+        elif argv[1][:2] == '--':
             long_args = argv
     except IndexError:
         pass
