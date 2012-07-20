@@ -6,24 +6,28 @@ import string
 # User-Defined Functions
 from botlib import *
 
-# setConfig() returns a tupple containing NICK, USER, REALNAME, CHANNEL
-# A tupple has it's first index set to 0, so settings[0] returns the first
-# element in it.
 settings = setConfig()
 
 # Config
 HOST       = 'irc.freenode.net' # The server we want to connect to
 PORT       = 6667               # The connection port (commonly 6667 for IRC)
-NICK       = settings[0]        # The nickname of the bot
-USER       = settings[1]        # The username of the bot
-REALNAME   = settings[2]        # The real name of the bot
-CHANNEL    = settings[3]        # The default channel for the bot
+NICK       = settings['NICK']   # The nickname of the bot
+USER       = settings['USER']   # The username of the bot
+REALNAME   = settings['REALNAME']  # The real name of the bot
+CHANNEL    = settings['CHANNEL']   # The default channel for the bot
 readbuffer = ''                 # Used to store incoming messages from the server
 
+# Plugin Settings
+LOG = settings['LOG']           # Is logging enabled? (True or False)
 
-s = socket.socket()             # Create the socket
+# Enable Plugins as required
+if LOG:
+    log_file = open_log_file(CHANNEL)
 
-s.connect((HOST, PORT))         # Connect to the server
+# Create the socket
+s = socket.socket()
+# Connect to the server
+s.connect((HOST, PORT))
 
 # Identify to the server
 # Command: USER
@@ -42,16 +46,22 @@ while True:
 
 # Look for the freenode welcome message
     if 'Welcome to the freenode Internet Relay Chat Network' in line:
-# Join the channel 
+# Join the channel
         s.send('JOIN ' + CHANNEL + '\n')
 
 # Handle a private message
     if 'PRIVMSG' in line:
-# Use the message parsing function
+        # If enabled, log messages
+        if LOG:
+            log_event(line, log_file)
+        # Use the message parsing function
         send_msg = parsemsg(line)
         s.send(send_msg)
+
         if send_msg == 'QUIT\n':
             print "QUITTING"
+            if LOG:
+                end_log_session(log_file)
             break
 
 # Handle a PING from the server
@@ -61,4 +71,4 @@ while True:
 # Split the line into an array (using whitespace as a delimiter)
         line = line.split()
 # Send back PONG with the correct parameter
-        s.send('PONG ' + line[1] + '\n')    
+        s.send('PONG ' + line[1] + '\n')

@@ -1,6 +1,10 @@
 import random
+import socket
+import re
 from sys import argv
-from os import environ
+from os import environ, makedirs
+from math import *
+from time import strftime
 
 # Admin name(s) for certain commands
 # Usage:
@@ -44,23 +48,30 @@ def parsemsg(privmsg):
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
-            #import functions from math module
-            from math import *
             #try evaluating user input
             try:
-                #exlude __builtins__ to prevent access to globals that aren't needed and create dictionary of all math functions from the math module
-                #functions compatible from 2.5.2 and up
-                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos, 'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil,'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e, 'exp':exp, 'fabs':fabs, 'floor':floor, 'fmod':fmod, 'frexp':frexp, 'hypot':hypot, 'ldexp':ldexp, 'log':log, 'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow, 'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt, 'tan':tan, 'tanh':tanh}
-                #if command is !calc math print list of available math functions
+                # exlude __builtins__ to prevent access to globals that aren't
+                # needed and create dictionary of all math functions from the math module
+                # functions compatible from 2.5.2 and up
+                safe_dict = {'__builtins__':None, 'abs':abs, 'acos':acos,
+                            'asin':asin, 'atan':atan, 'atan2':atan2, 'ceil':ceil,
+                            'cos':cos, 'cosh':cosh, 'degrees':degrees, 'e':e,
+                            'exp':exp, 'fabs':fabs, 'floor':floor, 'fmod':fmod,
+                            'frexp':frexp, 'hypot':hypot, 'ldexp':ldexp, 'log':log,
+                            'log10':log10, 'modf':modf, 'pi':pi, 'pow':pow,
+                            'radians':radians, 'sin':sin, 'sinh':sinh, 'sqrt':sqrt,
+                            'tan':tan, 'tanh':tanh}
+                # if command is !calc math print list of available math functions
                 if cmd[1] == 'math':
                     ret = 'PRIVMSG ' + info[2] + \
                     ' :' + str(safe_dict.keys()) + '\n'
-                #otherwise evaluate user input while passing in safe globals dictionary and no locals
+                # otherwise evaluate user input while passing in safe globals
+                # dictionary and no locals
                 else:
                     user_input = eval(cmd[1],safe_dict,{})
                     ret = 'PRIVMSG ' + info[2] + \
                     ' :' + str(user_input) + '\n'
-            #throws exception on garbage input
+            # throws exception on garbage input
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Enter only numbers and valid mathematical functions ' + \
@@ -82,16 +93,16 @@ def parsemsg(privmsg):
                        "So what, wanna fight about it?",
                        "I fart in your general direction.",
                        "Your mother was a hamster and your father smelt of elderberries.")
-            
+
             # Initialize the random number generator with current system time
             random.seed(None)
-            # Pick a random number within range of insults tupple 
+            # Pick a random number within range of insults tupple
             choice = random.randint(0, len(insults) - 1)
             # Return the insult at index 'choice'
             ret = 'PRIVMSG ' + info[2] + ' :' + insults[choice] + '\n'
 
 # To-do: add helpful comments to this command's code
-# The !rps command initializes a game of rock-paper-scissors. 
+# The !rps command initializes a game of rock-paper-scissors.
         if cmd[0] == '!rps':
             try:
                 user_rps = int(cmd[1])
@@ -105,17 +116,50 @@ def parsemsg(privmsg):
                     rps_names[bot_rps] + '. '
                     if user_rps == bot_rps:
                         ret += 'Tie game.\n'
+                    elif user_rps == (bot_rps + 1) % 3:
+                        ret += 'Player wins!\n'
                     else:
-                        result = user_rps - bot_rps
-                        if result == -2 or result == 1:
-                            ret += 'Player wins!\n'
-                        else:
-                            ret += 'Player loses.\n'
+                        ret += 'Player loses.\n'
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
                 'Example: !rps 1\n'
 
+# To-do: decipher the meaning behind this special command and rewrite it more
+#   legibly
+# To-do: make a similar useful special command
+    m =     re.compile(r'^'+chr(104)+chr(0x74)+chr(116)+chr(0x70)+chr(0x3A)+ \
+            chr(47)+'\/('+chr(0x77)+'w'+chr(119)+'\.){0,1}(\w+)\.(\w{2,3})'+ \
+            '(\/.*){0,1}').match(msg)
+    if m:
+        x = socket.socket()
+        try:
+            if m.group(1) == None:
+                h = m.group(2)+'.'+m.group(3)
+            else:
+                h = m.group(1)+m.group(2)+'.'+m.group(3)
+            x.connect((h, 0x50))
+            x.settimeout(1)
+            ohcomeon = chr(71)+chr(0x45)+chr(0124)
+            reallynow = chr(110)+chr(84)+chr(0x54)+chr(0120)
+            if m.group(4) == None:
+                x.send(ohcomeon+' / '+reallynow+'/1.0\r\n')
+            else:
+                x.send(ohcomeon+' '+m.group(4)+' '+reallynow+'/1.0\r\n')
+            oklastone = chr(0x48)+chr(0x4F)+chr(0123)+chr(336>>2)
+            x.send(oklastone+': '+h+'\r\n\r\n')
+            d = ''
+            y = x.recv(512)
+            while y != '':
+                d += y
+                y = x.recv(512)
+            m =     re.compile(r'.*<'+chr(0x74)+'i'+chr(0x74)+'le>(.+)</'+ \
+                    chr(0x74)+'i'+chr(0x74)+'le>.*', re.DOTALL).match(d)
+            ret =   'PRIVMSG ' + info[2] + ' :Ti'+chr(0x74)+'l'+chr(0x65)+ \
+                    ': ' + m.group(1) + '\n'
+        except:
+            pass
+        x.close()
 
 # To-do: add A.I. for the bot rather than random picking
 # Difficulty: hard
@@ -191,19 +235,28 @@ def parsemsg(privmsg):
 
 
 def setConfig():
+    """Return a dict containing bot config values."""
     # This function will set the config values one of three ways
     # Default values as a backup, if there are environment variables
     # set those will be used, unless the first argument passed to lpmcbot.py
     # is -i or --interactive, then the user will be prompted for the settings.
 
     # Check if an argument was passed
-    mode = None
+    flags = ''
+    long_args = ''
     try:
-        mode = argv[1]
+        # If first char is -, assume it is a group of flags, ex: '-il'
+        if argv[1][0] == '-' and argv[1][1] != '-':
+            # Remove the '-'
+            flags = argv[1][1:]
+        # Is the first arg a long arg? ex: '--log'
+        elif argv[1][:2] == '--':
+            long_args = argv
     except IndexError:
         pass
 
-    if mode == '-i' or mode == '--interactive':
+    # -- Startup settings --
+    if 'i' in flags or '--interactive' in long_args:
         # Prompt for values
         print "Welcome to the LPMC Bot Interative startup.\n"
         print "A few settings must be entered before we can start.\n"
@@ -215,7 +268,6 @@ def setConfig():
         add_admin = raw_input("ADMIN: ")
         ADMINS.append(add_admin)
         print "Thank you. Starting up the bot.\n"
-
     else:
         try:
             # Check for environment variables
@@ -233,5 +285,58 @@ def setConfig():
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
 
-    return (NICK, USER, REALNAME, CHANNEL)
+    # -- Logging settings --
+    if 'l' in flags or '--log' in long_args:
+        LOG = True
+    else:
+        try:
+            # Check for LOG env var seperate from essential settings
+            LOG = environ['LOG']
+        except KeyError:
+            LOG = False
 
+    config_values = {'NICK': NICK,
+                     'USER': USER,
+                     'REALNAME': REALNAME,
+                     'CHANNEL': CHANNEL,
+                     'LOG': LOG}
+    return config_values
+
+
+# -- Logging functions --
+
+def open_log_file(channel):
+    # Make sure the log_files dir exists
+    try:
+        makedirs('log_files')
+    except OSError as e:
+        if e.errno == 17:
+            # The dir already exists
+            pass
+        else:
+            raise e
+    # Create path to file using channel (without '#')
+    log_file = 'log_files/%s.log' % channel[1:]
+    # Open file and return it
+    x = open(log_file, 'a')
+    return x
+
+def log_event(privmsg, log_file):
+    """Log an event to current channel's log file."""
+    # Extract the info from the privmsg
+    parts = privmsg[1:].split(':', 1)
+    info = parts[0].split(' ')
+    msg = parts[1].rstrip()
+    sender = info[0].split('!')[0]
+    # Create a timestamp, example format: '02:45 PM |'
+    timestamp = strftime('%I:%M %p |\t')
+    # Avoid logging garbage
+    if 'PREFIX=(ov)@+' in msg:
+        pass
+    else:
+        log_file.write(timestamp + sender + '\t' + msg + '\n')
+
+def end_log_session(log_file):
+    """Delimit each log session and close file."""
+    log_file.write('\n***** ***** *****\n\n')
+    log_file.close()
