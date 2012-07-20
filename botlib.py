@@ -22,7 +22,7 @@ def parsemsg(privmsg):
     parts = privmsg[1:].split(':', 1)
 # The information part of the message (sender, "PRIVMSG", channel/nickname)
     info = parts[0].split(' ')
-    msg = parts[1].rstrip()	# The message part (e.g., "Hello?")
+    msg = parts[1].rstrip()    # The message part (e.g., "Hello?")
 # The sender of the message (e.g., "SlimTim10")
     sender = info[0].split('!')[0]
 # The string to be returned
@@ -163,75 +163,75 @@ def parsemsg(privmsg):
 
 # To-do: add A.I. for the bot rather than random picking
 # Difficulty: hard
-	if cmd[0] == '!ttt':
-	    winner = 0
-	    try:
+    if cmd[0] == '!ttt':
+        winner = 0
+        try:
                 user_ttt = int(cmd[1])
                 if user_ttt < 0 or user_ttt > 9:
                     raise Exception("Invalid")
 
-		availableSpaces = []
-		for i in range(min(len(TICTACTOE),9)):      #this checks for open spaces 
-			if (TICTACTOE[i] == '_'):           #it's run after every cmd
-				availableSpaces.append(i+1)
+        availableSpaces = []
+        for i in range(min(len(TICTACTOE),9)):      #this checks for open spaces 
+            if (TICTACTOE[i] == '_'):           #it's run after every cmd
+                availableSpaces.append(i+1)
 
-		if (user_ttt == 0):                         #this initializes the board
-		    for i in range(len(TICTACTOE)):
-			TICTACTOE.pop(0)
-		    for i in range(9):
-			TICTACTOE.append('_')
-		    ret = 'PRIVMSG ' + info[2] + \
-		    ' :' + 'New Game started! To play, type !ttt followed ' + \
-			'by a number. Example: "!ttt 3" for top right corner.' + '\n' 
+        if (user_ttt == 0):                         #this initializes the board
+            for i in range(len(TICTACTOE)):
+            TICTACTOE.pop(0)
+            for i in range(9):
+            TICTACTOE.append('_')
+            ret = 'PRIVMSG ' + info[2] + \
+            ' :' + 'New Game started! To play, type !ttt followed ' + \
+            'by a number. Example: "!ttt 3" for top right corner.' + '\n' 
 
-		elif user_ttt in availableSpaces:       #this handles the player's move 
-		    TICTACTOE[user_ttt - 1] = 'O'
-		    availableSpaces.remove(user_ttt)
-		    ret = 'PRIVMSG ' + info[2] + ' :' 
-		    for i in range(9):
-			ret = ret + TICTACTOE[i] + ' '
-			if (i % 3 == 2 and i > 0):
-							#for one line rather than three
-				#ret = ret + '| '       #uncomment this line and comment 
-							#the line underneath this one.
-				ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
-		    ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' : ### \n' 
-		    if (len(availableSpaces)):          #the following handles bot's move
-			    botRandPick = random.randint(0,len(availableSpaces)-1)	
-			    TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
-			    availableSpaces.remove(availableSpaces[botRandPick])
-			    ret = ret + 'PRIVMSG ' + info[2] + ' :' 
-			    for i in range(9):
-				ret = ret + TICTACTOE[i] + ' '
-				if (i % 3 == 2 and i > 0):
-								#for one line rather than three
-					#ret = ret + '| '       #uncomment this line and comment 
-								#the line underneath this one.
-					ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
-			    ret = ret + '\n'
+        elif user_ttt in availableSpaces:       #this handles the player's move 
+            TICTACTOE[user_ttt - 1] = 'O'
+            availableSpaces.remove(user_ttt)
+            ret = 'PRIVMSG ' + info[2] + ' :' 
+            for i in range(9):
+            ret = ret + TICTACTOE[i] + ' '
+            if (i % 3 == 2 and i > 0):
+                            #for one line rather than three
+                #ret = ret + '| '       #uncomment this line and comment 
+                            #the line underneath this one.
+                ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
+            ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' : ### \n' 
+            if (len(availableSpaces)):          #the following handles bot's move
+                botRandPick = random.randint(0,len(availableSpaces)-1)    
+                TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
+                availableSpaces.remove(availableSpaces[botRandPick])
+                ret = ret + 'PRIVMSG ' + info[2] + ' :' 
+                for i in range(9):
+                ret = ret + TICTACTOE[i] + ' '
+                if (i % 3 == 2 and i > 0):
+                                #for one line rather than three
+                    #ret = ret + '| '       #uncomment this line and comment 
+                                #the line underneath this one.
+                    ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
+                ret = ret + '\n'
 
-		else:
-		    ret = 'PRIVMSG ' + info[2] + ' : Space is already taken.' + '\n' 
+        else:
+            ret = 'PRIVMSG ' + info[2] + ' : Space is already taken.' + '\n' 
 
-		#the following checks for win conditions and sets the winner variable
-		if (TICTACTOE[0] == TICTACTOE[1] == TICTACTOE[2]):winner = TICTACTOE[0] 
-		if (TICTACTOE[3] == TICTACTOE[4] == TICTACTOE[5]):winner = TICTACTOE[3] 
-		if (TICTACTOE[6] == TICTACTOE[7] == TICTACTOE[8]):winner = TICTACTOE[6] 
-		if (TICTACTOE[0] == TICTACTOE[3] == TICTACTOE[6]):winner = TICTACTOE[0] 
-		if (TICTACTOE[1] == TICTACTOE[4] == TICTACTOE[7]):winner = TICTACTOE[1] 
-		if (TICTACTOE[2] == TICTACTOE[5] == TICTACTOE[8]):winner = TICTACTOE[2] 
-		if (TICTACTOE[0] == TICTACTOE[4] == TICTACTOE[8]):winner = TICTACTOE[0] 
-		if (TICTACTOE[2] == TICTACTOE[4] == TICTACTOE[6]):winner = TICTACTOE[2] 
-		if winner == '_': winner = 0
-		
-		if (winner):
-		    ret = 'PRIVMSG ' + info[2] + ' : The winner is ' + winner + '!\n'
-	    except:
-		#How-To stuff
+        #the following checks for win conditions and sets the winner variable
+        if (TICTACTOE[0] == TICTACTOE[1] == TICTACTOE[2]):winner = TICTACTOE[0] 
+        if (TICTACTOE[3] == TICTACTOE[4] == TICTACTOE[5]):winner = TICTACTOE[3] 
+        if (TICTACTOE[6] == TICTACTOE[7] == TICTACTOE[8]):winner = TICTACTOE[6] 
+        if (TICTACTOE[0] == TICTACTOE[3] == TICTACTOE[6]):winner = TICTACTOE[0] 
+        if (TICTACTOE[1] == TICTACTOE[4] == TICTACTOE[7]):winner = TICTACTOE[1] 
+        if (TICTACTOE[2] == TICTACTOE[5] == TICTACTOE[8]):winner = TICTACTOE[2] 
+        if (TICTACTOE[0] == TICTACTOE[4] == TICTACTOE[8]):winner = TICTACTOE[0] 
+        if (TICTACTOE[2] == TICTACTOE[4] == TICTACTOE[6]):winner = TICTACTOE[2] 
+        if winner == '_': winner = 0
+        
+        if (winner):
+            ret = 'PRIVMSG ' + info[2] + ' : The winner is ' + winner + '!\n'
+        except:
+        #How-To stuff
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Tic-Tac-Toe. ' + \
                 'To start a new game: !ttt 0\n'
-    return ret			# Return the appropriate string
+    return ret            # Return the appropriate string
 
 
 def setConfig():
