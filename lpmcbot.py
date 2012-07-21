@@ -22,7 +22,8 @@ LOG = settings['LOG']           # Is logging enabled? (True or False)
 
 # Enable Plugins as required
 if LOG:
-    log_file = open_log_file(CHANNEL)
+    log_file = open_log_file(HOST, CHANNEL)
+    write_log_header(NICK, log_file)
 
 # Create the socket
 s = socket.socket()
