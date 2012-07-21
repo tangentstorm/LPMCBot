@@ -44,8 +44,8 @@ while True:
     line = s.recv(500)          # Receive a server message (max 500 characters)
     print line                  # Output the server message
 
-# Look for the freenode welcome message
-    if 'Welcome to the freenode Internet Relay Chat Network' in line:
+# Wait for the MOTD to finish
+    if 'End of /MOTD command' in line:
 # Join the channel
         s.send('JOIN ' + CHANNEL + '\n')
 
