@@ -12,16 +12,19 @@ from time import strftime
 #           myfunc()
 ADMINS = ["SlimTim10", "Z_Mass", "intothev01d"]
 
-def parsemsg(privmsg):
-# Split the received PRIVMSG message into two useful parts
-# Example message:
-#   :SlimTim10!~SlimTim10@127-0-0-1.network.com PRIVMSG #channel :Hello?
+def split_privmsg(privmsg):
+    # Split the received PRIVMSG message into two useful parts
+    # Example message:
+    #   :SlimTim10!~SlimTim10@127-0-0-1.network.com PRIVMSG #channel :Hello?
     parts = privmsg[1:].split(':', 1)
-# The information part of the message (sender, "PRIVMSG", channel/nickname)
+    # The information part of the message (sender, "PRIVMSG", channel/nickname)
     info = parts[0].split(' ')
     msg = parts[1].rstrip()	# The message part (e.g., "Hello?")
-# The sender of the message (e.g., "SlimTim10")
+    # The sender of the message (e.g., "SlimTim10")
     sender = info[0].split('!')[0]
+    return info, msg, sender
+
+def parsemsg(info, msg, sender):
 # The string to be returned
     ret = ''
 # Treat messages starting with '!' as commands (e.g., "!say hi")
@@ -251,13 +254,8 @@ def open_log_file(channel):
     x = open(log_file, 'a')
     return x
 
-def log_event(privmsg, log_file):
+def log_event(msg, sender, log_file):
     """Log an event to current channel's log file."""
-    # Extract the info from the privmsg
-    parts = privmsg[1:].split(':', 1)
-    info = parts[0].split(' ')
-    msg = parts[1].rstrip()
-    sender = info[0].split('!')[0]
     # Create a timestamp, example format: '02:45 PM |'
     timestamp = strftime('%I:%M %p |\t')
     # Avoid logging garbage

@@ -51,17 +51,19 @@ while True:
 
 # Handle a private message
     if 'PRIVMSG' in line:
+        # Split the privmsg
+        info, msg, sender = split_privmsg(line)
+        # Use the message parsing function
+        send_msg = parsemsg(info, msg, sender)
+        s.send(send_msg)
         # If enabled, log messages
         if LOG:
-            log_event(line, log_file)
-        # Use the message parsing function
-        send_msg = parsemsg(line)
-        s.send(send_msg)
+            log_event(msg, sender, log_file)
 
         if send_msg == 'QUIT\n':
-            print "QUITTING"
             if LOG:
                 end_log_session(log_file)
+            print "QUITTING"
             break
 
 # Handle a PING from the server
