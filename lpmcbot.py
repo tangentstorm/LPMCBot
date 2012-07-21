@@ -45,24 +45,26 @@ while True:
     line = s.recv(500)          # Receive a server message (max 500 characters)
     print line                  # Output the server message
 
-# Look for the freenode welcome message
-    if 'Welcome to the freenode Internet Relay Chat Network' in line:
+# Wait for the MOTD to finish
+    if 'End of /MOTD command' in line:
 # Join the channel
         s.send('JOIN ' + CHANNEL + '\n')
 
 # Handle a private message
     if 'PRIVMSG' in line:
+        # Split the privmsg
+        info, msg, sender = split_privmsg(line)
+        # Use the message parsing function
+        send_msg = parsemsg(info, msg, sender)
+        s.send(send_msg)
         # If enabled, log messages
         if LOG:
-            log_event(line, log_file)
-        # Use the message parsing function
-        send_msg = parsemsg(line)
-        s.send(send_msg)
+            log_event(msg, sender, log_file)
 
         if send_msg == 'QUIT\n':
-            print "QUITTING"
             if LOG:
                 end_log_session(log_file)
+            print "QUITTING"
             break
 
 # Handle a PING from the server
