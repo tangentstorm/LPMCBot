@@ -34,16 +34,19 @@ def tttWinCheck():
         and (TICTACTOE[6] != '_')):winner = TICTACTOE[2] 
     return winner
 
-def parsemsg(privmsg):
-# Split the received PRIVMSG message into two useful parts
-# Example message:
-#   :SlimTim10!~SlimTim10@127-0-0-1.network.com PRIVMSG #channel :Hello?
+def split_privmsg(privmsg):
+    # Split the received PRIVMSG message into two useful parts
+    # Example message:
+    #   :SlimTim10!~SlimTim10@127-0-0-1.network.com PRIVMSG #channel :Hello?
     parts = privmsg[1:].split(':', 1)
-# The information part of the message (sender, "PRIVMSG", channel/nickname)
+    # The information part of the message (sender, "PRIVMSG", channel/nickname)
     info = parts[0].split(' ')
-    msg = parts[1].rstrip()    # The message part (e.g., "Hello?")
-# The sender of the message (e.g., "SlimTim10")
+    msg = parts[1].rstrip()	# The message part (e.g., "Hello?")
+    # The sender of the message (e.g., "SlimTim10")
     sender = info[0].split('!')[0]
+    return info, msg, sender
+
+def parsemsg(info, msg, sender):
 # The string to be returned
     ret = ''
 # Treat messages starting with '!' as commands (e.g., "!say hi")
@@ -314,10 +317,12 @@ def setConfig():
 
 # -- Logging functions --
 
-def open_log_file(channel):
-    # Make sure the log_files dir exists
+def open_log_file(server, channel):
+    """Open the log file and return it"""
+    # Get the name of the server and create a log directory
+    log_dir = 'log_files/%s' % server.split('.')[1]
     try:
-        makedirs('log_files')
+        makedirs(log_dir)
     except OSError as e:
         if e.errno == 17:
             # The dir already exists
@@ -325,18 +330,24 @@ def open_log_file(channel):
         else:
             raise e
     # Create path to file using channel (without '#')
-    log_file = 'log_files/%s.log' % channel[1:]
-    # Open file and return it
-    x = open(log_file, 'a')
-    return x
+    # Example: "log_files/freenode/lpmc.log"
+    file_path = '%s/%s.log' % (log_dir, channel[1:])
+    log = open(file_path, 'a')
+    return log
 
-def log_event(privmsg, log_file):
+def write_log_header(bot_nick, log_file):
+    """Create a header and write to the log file"""
+    # Header message
+    msg = strftime('\t* %c *\n') + '\t* Logged in as: %s *\n' % bot_nick
+    # Create border
+    longest = len(max(msg.split('\n'), key=len))
+    border = '\t%s\n' % ('*' * (longest - 1))
+    # Assemble the header
+    header = border + msg + border
+    log_file.write(header)
+
+def log_event(msg, sender, log_file):
     """Log an event to current channel's log file."""
-    # Extract the info from the privmsg
-    parts = privmsg[1:].split(':', 1)
-    info = parts[0].split(' ')
-    msg = parts[1].rstrip()
-    sender = info[0].split('!')[0]
     # Create a timestamp, example format: '02:45 PM |'
     timestamp = strftime('%I:%M %p |\t')
     # Avoid logging garbage
@@ -347,5 +358,5 @@ def log_event(privmsg, log_file):
 
 def end_log_session(log_file):
     """Delimit each log session and close file."""
-    log_file.write('\n***** ***** *****\n\n')
+    log_file.write('\n\t\t***** ***** *****\n\n')
     log_file.close()
