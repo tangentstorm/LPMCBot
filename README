@@ -1,5 +1,12 @@
 This is an IRC bot written in Python. It is meant to be simple as a starting point so that LPMC learners can learn from it and add features/functionality.
 
+There are a few rules to contributing to this project:
+    - No tab characters are allowed (all indents should be 4 spaces). You can configure this in your editor.
+    - Do not create classes in this project. Look for other projects more suitable for practicing OOP.
+    - Please test your code and make sure it works properly before submitting a pull request.
+
+Note that there are "To-do"s as comments in the bot's code. These are suggestions for possible contributions. You may decide on your own contributions to make in the project. If you do not know what to contribute and would like more suggestions, join the #lpmc IRC channel and ask for help.
+
 The bot can be started in a few ways:
     - Interactive Mode
         Start the bot with '-i' or '--interactive' and it will prompt for a few

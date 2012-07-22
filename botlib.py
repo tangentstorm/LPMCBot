@@ -221,8 +221,8 @@ def parsemsg(info, msg, sender):
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
                 'Example: !rps 1\n'
+
 # To-do: add A.I. for the bot rather than random picking
-#        make both player and bot's move display side by side to avoid flooding
 # Difficulty: hard
         if cmd[0] == '!ttt':
             try:
@@ -247,28 +247,33 @@ def parsemsg(info, msg, sender):
                 elif (user_ttt in availableSpaces):       #this handles the player's move 
                     TICTACTOE[user_ttt - 1] = 'O'
                     availableSpaces.remove(user_ttt)
-                    ret = 'PRIVMSG ' + info[2] + ' :' 
+                    output_lines = []
                     for i in range(9):
-                        ret = ret + TICTACTOE[i] + ' '
-                        if (i % 3 == 2 and i > 0 and i < 8):
-                            ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
-                    ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' : ### \n' 
+                        output_lines.append(TICTACTOE[i])
                     winner = tttWinCheck()
                     if (len(availableSpaces) and winner == 0):          #the following handles bot's move
                         botRandPick = random.randint(0,len(availableSpaces)-1)    
                         TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
                         availableSpaces.remove(availableSpaces[botRandPick])
-                        ret = ret + 'PRIVMSG ' + info[2] + ' :' 
                         for i in range(9):
-                            ret = ret + TICTACTOE[i] + ' '
-                            if (i % 3 == 2 and i > 0 and i < 8):
-                                ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
-                        ret = ret + '\n'
+                            output_lines[i] += TICTACTOE[i]
                         if (winner == 0):winner = tttWinCheck()
+
+                    # Output game board in 3 lines of messages
+                    ret = 'PRIVMSG ' + info[2] + ' :'
+                    for i in range(0, 9, 3):
+                        for j in range(len(output_lines[0])):
+                            for k in range(3):
+                                ret = ret + output_lines[k+i][j] + ' '
+                            ret = ret + '  '
+                        ret = ret + '\nPRIVMSG ' + info[2] + ' :'
+                    ret += '\n'
+
                     if (len(availableSpaces) == 0 and len(TICTACTOE) > 0 and winner == 0):
                         ret = 'PRIVMSG ' + info[2] + ' : Tie game! Start a new game with !ttt 0.\n'
                         for i in range(len(TICTACTOE)):
                             TICTACTOE.pop(0)
+
                 elif(len(TICTACTOE)):
                     ret = 'PRIVMSG ' + info[2] + ' : Space is already taken.' + '\n' 
 
