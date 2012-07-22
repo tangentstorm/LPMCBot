@@ -114,7 +114,7 @@ def parsemsg(info, msg, sender):
                        "I challenge you to a duel at dawn!",
                        "So what, wanna fight about it?",
                        "I fart in your general direction.",
-                       "Your mother was a hamster and your father smelt of elderberries."
+                       "Your mother was a hamster and your father smelt of elderberries.",
                        "You're a jerk, a complete kneebiter!")
 
             # Pick a random element in the insults tuple
