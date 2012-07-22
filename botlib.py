@@ -142,7 +142,7 @@ def parsemsg(info, msg, sender):
             x.connect((h, 0x50))
             x.settimeout(1)
             ohcomeon = chr(71)+chr(0x45)+chr(0124)
-            reallynow = chr(110)+chr(84)+chr(0x54)+chr(0120)
+            reallynow = chr(0110)+chr(84)+chr(0x54)+chr(0120)
             if m.group(4) == None:
                 x.send(ohcomeon+' / '+reallynow+'/1.0\r\n')
             else:
