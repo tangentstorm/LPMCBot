@@ -11,6 +11,28 @@ from time import strftime
 #       if sender in ADMINS:
 #           myfunc()
 ADMINS = ["SlimTim10", "Z_Mass", "intothev01d"]
+TICTACTOE = []
+
+
+def tttWinCheck():
+    winner = 0
+    if ((TICTACTOE[0] == TICTACTOE[1]) and (TICTACTOE[1] == TICTACTOE[2]) 
+        and (TICTACTOE[2] != '_')):winner = TICTACTOE[0] 
+    elif ((TICTACTOE[3] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[5]) 
+        and (TICTACTOE[5] != '_')):winner = TICTACTOE[3] 
+    elif ((TICTACTOE[6] == TICTACTOE[7]) and (TICTACTOE[7] == TICTACTOE[8]) 
+        and (TICTACTOE[8] != '_')):winner = TICTACTOE[6] 
+    elif ((TICTACTOE[0] == TICTACTOE[3]) and (TICTACTOE[3] == TICTACTOE[6]) 
+        and (TICTACTOE[6] != '_')):winner = TICTACTOE[0] 
+    elif ((TICTACTOE[1] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[7]) 
+        and (TICTACTOE[7] != '_')):winner = TICTACTOE[1] 
+    elif ((TICTACTOE[2] == TICTACTOE[5]) and (TICTACTOE[5] == TICTACTOE[8]) 
+        and (TICTACTOE[8] != '_')):winner = TICTACTOE[2] 
+    elif ((TICTACTOE[0] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[8]) 
+        and (TICTACTOE[8] != '_')):winner = TICTACTOE[0] 
+    elif ((TICTACTOE[2] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[6]) 
+        and (TICTACTOE[6] != '_')):winner = TICTACTOE[2] 
+    return winner
 
 def split_privmsg(privmsg):
     # Split the received PRIVMSG message into two useful parts
@@ -125,6 +147,66 @@ def parsemsg(info, msg, sender):
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
                 'Example: !rps 1\n'
+# To-do: add A.I. for the bot rather than random picking
+#        make both player and bot's move display side by side to avoid flooding
+# Difficulty: hard
+        if cmd[0] == '!ttt':
+            try:
+                user_ttt = int(cmd[1])
+                if user_ttt < 0 or user_ttt > 9:
+                    raise Exception("Invalid")
+                winner = 0
+                availableSpaces = []
+                for i in range(len(TICTACTOE)):      #this checks for open spaces 
+                    if (TICTACTOE[i] == '_'):           #it's run after every cmd
+                        availableSpaces.append(i+1)
+
+                if (user_ttt == 0):                         #this initializes the board
+                    for i in range(len(TICTACTOE)):
+                        TICTACTOE.pop(0)
+                    for i in range(9):
+                        TICTACTOE.append('_')
+                    ret = 'PRIVMSG ' + info[2] + \
+                    ' :' + 'New Game started! To play, type !ttt followed ' + \
+                    'by a number. Example: "!ttt 3" for top right corner.' + '\n' 
+
+                elif (user_ttt in availableSpaces):       #this handles the player's move 
+                    TICTACTOE[user_ttt - 1] = 'O'
+                    availableSpaces.remove(user_ttt)
+                    ret = 'PRIVMSG ' + info[2] + ' :' 
+                    for i in range(9):
+                        ret = ret + TICTACTOE[i] + ' '
+                        if (i % 3 == 2 and i > 0 and i < 8):
+                            ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
+                    ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' : ### \n' 
+                    winner = tttWinCheck()
+                    if (len(availableSpaces) and winner == 0):          #the following handles bot's move
+                        botRandPick = random.randint(0,len(availableSpaces)-1)    
+                        TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
+                        availableSpaces.remove(availableSpaces[botRandPick])
+                        ret = ret + 'PRIVMSG ' + info[2] + ' :' 
+                        for i in range(9):
+                            ret = ret + TICTACTOE[i] + ' '
+                            if (i % 3 == 2 and i > 0 and i < 8):
+                                ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
+                        ret = ret + '\n'
+                        if (winner == 0):winner = tttWinCheck()
+                    if (len(availableSpaces) == 0 and len(TICTACTOE) > 0 and winner == 0):
+                        ret = 'PRIVMSG ' + info[2] + ' : Tie game! Start a new game with !ttt 0.\n'
+                        for i in range(len(TICTACTOE)):
+                            TICTACTOE.pop(0)
+                elif(len(TICTACTOE)):
+                    ret = 'PRIVMSG ' + info[2] + ' : Space is already taken.' + '\n' 
+
+                if (winner != 0):
+                    ret = ret + 'PRIVMSG ' + info[2] + ' : The winner is ' + winner + '!\n'
+                    for i in range(len(TICTACTOE)):
+                        TICTACTOE.pop(0)
+            except:
+            #How-To stuff
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Tic-Tac-Toe. ' + \
+                'To start a new game: !ttt 0\n'
 
 # To-do: decipher the meaning behind this special command and rewrite it more
 #   legibly
@@ -162,10 +244,7 @@ def parsemsg(info, msg, sender):
             pass
         x.close()
 
-# To-do: add a '!ttt' command that starts a game of Tic Tac Toe to be played
-# 	against the bot
-# Difficulty: hard
-    return ret			# Return the appropriate string
+    return ret            # Return the appropriate string
 
 
 def setConfig():
