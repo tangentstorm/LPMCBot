@@ -32,8 +32,9 @@ def parsemsg(info, msg, sender):
 # Split command message into two parts: bot command and following text
         cmd = msg.split(' ', 1)
 
-# The '!say' command makes the bot say something
-        if cmd[0] == '!say':
+# The '!say' command makes the bot say something,
+# assuming a message is provided
+        if cmd[0] == '!say' and len(cmd) > 1:
             # Bot will respond to !say command via private message if
             # privmsg is not "PRIVMSG + #channel + cmd"
             if info[2][0] != '#':
