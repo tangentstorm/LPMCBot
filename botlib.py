@@ -83,7 +83,8 @@ def tttWin():
                         return innerCount
                     if (TICTACTOE[innerCount] == TICTACTOE[innerCount+6]):
                         return innerCount+3
-            
+    return -1
+    
 def tttCenter():
     #Returns the center square
     if ("_" == TICTACTOE[5]):
