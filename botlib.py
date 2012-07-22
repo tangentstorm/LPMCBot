@@ -144,6 +144,7 @@ def parsemsg(privmsg):
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
                 'Example: !rps 1\n'
 # To-do: add A.I. for the bot rather than random picking
+#        make both player and bot's move display side by side to avoid flooding
 # Difficulty: hard
         if cmd[0] == '!ttt':
             try:
@@ -175,7 +176,7 @@ def parsemsg(privmsg):
                             ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
                     ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' : ### \n' 
                     winner = tttWinCheck()
-                    if (len(availableSpaces)):          #the following handles bot's move
+                    if (len(availableSpaces) and winner == 0):          #the following handles bot's move
                         botRandPick = random.randint(0,len(availableSpaces)-1)    
                         TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
                         availableSpaces.remove(availableSpaces[botRandPick])
@@ -186,13 +187,17 @@ def parsemsg(privmsg):
                                 ret = ret + '\n' + 'PRIVMSG ' + info[2] + ' :' 
                         ret = ret + '\n'
                         if (winner == 0):winner = tttWinCheck()
-                    if (len(availableSpaces) == 0 and len(TICTACTOE) > 0):
+                    if (len(availableSpaces) == 0 and len(TICTACTOE) > 0 and winner == 0):
                         ret = 'PRIVMSG ' + info[2] + ' : Tie game! Start a new game with !ttt 0.\n'
+                        for i in range(len(TICTACTOE)):
+                            TICTACTOE.pop(0)
                 elif(len(TICTACTOE)):
                     ret = 'PRIVMSG ' + info[2] + ' : Space is already taken.' + '\n' 
 
                 if (winner != 0):
-                    ret = 'PRIVMSG ' + info[2] + ' : The winner is ' + winner + '!\n'
+                    ret = ret + 'PRIVMSG ' + info[2] + ' : The winner is ' + winner + '!\n'
+                    for i in range(len(TICTACTOE)):
+                        TICTACTOE.pop(0)
             except:
             #How-To stuff
                 ret = 'PRIVMSG ' + info[2] + \
