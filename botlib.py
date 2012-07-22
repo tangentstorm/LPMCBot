@@ -33,7 +33,73 @@ def tttWinCheck():
     elif ((TICTACTOE[2] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[6]) 
         and (TICTACTOE[6] != '_')):winner = TICTACTOE[2] 
     return winner
+	
+def tttAI():
+	#Gave the AI the potential to lose so it can be fun, but is still decent.
+	#Returns the numeric value [0-8] of the move it wants to make
+	#based on 0 = top left & 8 = bottom right moving left to right & top to bottom
+	if (tttWin() != 0):
+		return tttWin()
+	if (tttCenter() != 0):
+		return tttCenter()
+	if (tttCorner() != 0):
+		return tttCorner()
+	else:
+		return tttEdge()
 
+def tttWin():
+	#Defines starting positions for all possible win scenarios
+	startingPoints = [[0,3,6],[0,1,2],[0,2,6,8]]
+	for outerCount in startingPoints:
+		for innerCount in outerCount:
+			#The diagonal scenarios
+			if (4 == LEN(outerCount)):
+				if (TICTACTOE[4] == TICTACTOE[innerCount] and 0 == innerCount):
+					return 8
+				if (TICTACTOE[4] == TICTACTOE[innerCount] and 2 == innerCount):
+					return 6
+				if (TICTACTOE[4] == TICTACTOE[innerCount] and 6 == innerCount):
+					return 2
+				if (TICTACTOE[4] == TICTACTOE[innerCount] and 8 == innerCount):
+					return 0
+			#The vertical and horizontal scenarios
+			else:
+				#The horizontal scenarios
+				if (3 == outerCount[1]): 
+					if (TICTACTOE[innerCount] == TICTACTOE[innerCount+1]):
+						return innerCount+2
+					if (TICTACTOE[innerCount+1] == TICTACTOE[innerCount+2]):
+						return innerCount
+					if (TICTACTOE[innerCount] == TICTACTOE[innerCount+2]):
+						return innerCount+1
+				#The vertical scenarios
+				if (1 == outerCount[1]):
+					if (TICTACTOE[innerCount] == TICTACTOE[innerCount+3]):
+						return innerCount+6
+					if (TICTACTOE[innerCount+3] == TICTACTOE[innerCount+6]):
+						return innerCount
+					if (TICTACTOE[innerCount] == TICTACTOE[innerCount+6]):
+						return innerCount+3
+			
+def tttCenter():
+	#Returns the center square
+	if ("_" == TICACTOE[5]):
+		return 5
+
+def tttCorner():
+	#Returns an open corner
+	checkList = [0,2,6,8]
+	for check in checkList:
+		if ("_" == check):
+			return check
+
+def tttEdge():
+	#Returns an open edge
+	checkList = [1,3,5,7]
+	for check in checkList:
+		if ("_" == check):
+			return check
+	
 def split_privmsg(privmsg):
     # Split the received PRIVMSG message into two useful parts
     # Example message:
