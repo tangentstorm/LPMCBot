@@ -10,7 +10,7 @@ from time import strftime
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
-ADMINS = ["SlimTim10", "Z_Mass", "intothev01d"]
+ADMINS = ["SlimTim10", "Z_Mass", "intothev01d", "naxir"]
 TICTACTOE = []
 
 
@@ -65,9 +65,32 @@ def parsemsg(info, msg, sender):
             else:
                 ret = 'PRIVMSG ' + info[2] + ' :' + cmd[1] + '\n'
 
+# --- Utilities ---
+        
+        # The following is the implementation of commands which alter usermodes
+        # !<command> <nickname>
+        # This command will change the mode of the sender if no paramter is given, otherwise
+        # it will modify the specified user. (admin command)
+        # Syntax of message sent to irc server: MODE #channel +-ov nickname
+        modeCommands = { '!op': '+o', '!deop': '-o', '!voice': '+v', '!devoice': '-v' }
+        
+        if cmd[0] in modeCommands.keys() and sender in ADMINS:
+            # Begin forming return string by writing: MODE channelname
+            ret = 'MODE ' + info[2]
+            # Next, specify the mode
+            ret += ' ' + modeCommands[cmd[0]] + ' '
+
+            # Finally, specify target     
+            if len(cmd) == 1:
+                ret += sender
+            else:
+                ret += cmd[1]
+            return ret + "\n" # we should be all done now.
+
 # The '!die' command makes the bot quit (admin command)
         if cmd[0] == '!die' and sender in ADMINS:
             ret = 'QUIT\n'
+# --- End Utilities ---
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
