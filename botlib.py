@@ -85,8 +85,7 @@ def parsemsg(info, msg, sender):
 # The '!insult' command prints out a randomly selected insult from a list.
         if cmd[0] == '!insult':
             # Tupple containing all the insults.
-            # More can be added without modifying any other code as
-            # as 'len(insults) -1' keeps the random number within range.
+            # More can be added without modifying any other code.
             insults = ("Hey, you be quiet now!",
                        "What are you? An idiot!?",
                        "I know where you live..",
@@ -95,14 +94,13 @@ def parsemsg(info, msg, sender):
                        "I challenge you to a duel at dawn!",
                        "So what, wanna fight about it?",
                        "I fart in your general direction.",
-                       "Your mother was a hamster and your father smelt of elderberries.")
+                       "Your mother was a hamster and your father smelt of elderberries.",
+                       "You're a jerk, a complete kneebiter!")
 
-            # Initialize the random number generator with current system time
-            random.seed(None)
-            # Pick a random number within range of insults tupple
-            choice = random.randint(0, len(insults) - 1)
-            # Return the insult at index 'choice'
-            ret = 'PRIVMSG ' + info[2] + ' :' + insults[choice] + '\n'
+            # Pick a random element in the insults tuple
+            choice = random.choice(insults)
+            # Return the insult
+            ret = 'PRIVMSG ' + info[2] + ' :' + choice + '\n'
 
 # To-do: add helpful comments to this command's code
 # The !rps command initializes a game of rock-paper-scissors.
