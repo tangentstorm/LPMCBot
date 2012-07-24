@@ -1,3 +1,5 @@
+TICTACTOE = ["_","_","_","_","_","_","_","_","_"]
+
 def tttWinCheck():
     winner = 0
     if ((TICTACTOE[0] == TICTACTOE[1]) and (TICTACTOE[1] == TICTACTOE[2]) 
@@ -53,19 +55,19 @@ def tttWin():
             else:
                 #The horizontal scenarios
                 if (3 == outerCount[1]): 
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+1]):
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+1] and "_" != TICTACTOE[innerCount]):
                         return innerCount+2
-                    if (TICTACTOE[innerCount+1] == TICTACTOE[innerCount+2]):
+                    if (TICTACTOE[innerCount+1] == TICTACTOE[innerCount+2] and "_" != TICTACTOE[innerCount+1]):
                         return innerCount
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+2]):
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+2] and "_" != TICTACTOE[innerCount]):
                         return innerCount+1
                 #The vertical scenarios
                 if (1 == outerCount[1]):
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+3]):
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+3] and "_" != TICTACTOE[innerCount]):
                         return innerCount+6
-                    if (TICTACTOE[innerCount+3] == TICTACTOE[innerCount+6]):
+                    if (TICTACTOE[innerCount+3] == TICTACTOE[innerCount+6] and "_" != TICTACTOE[innerCount+3]):
                         return innerCount
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+6]):
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+6] and "_" != TICTACTOE[innerCount]):
                         return innerCount+3
     return -1
     

@@ -12,7 +12,6 @@ from tttlib import *
 #       if sender in ADMINS:
 #           myfunc()
 ADMINS = ["SlimTim10", "Z_Mass", "intothev01d", "naxir"]
-TICTACTOE = []
 
 def split_privmsg(privmsg):
     # Split the received PRIVMSG message into two useful parts
@@ -179,9 +178,9 @@ def parsemsg(info, msg, sender):
                         output_lines.append(TICTACTOE[i])
                     winner = tttWinCheck()
                     if (len(availableSpaces) and winner == 0):          #the following handles bot's move
-                        botRandPick = random.randint(0,len(availableSpaces)-1)    
-                        TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
-                        availableSpaces.remove(availableSpaces[botRandPick])
+                        botPick = tttAI()
+                        TICTACTOE[availableSpaces[botPick] - 1] = 'X'
+                        availableSpaces.remove(availableSpaces[botPick])
                         for i in range(9):
                             output_lines[i] += TICTACTOE[i]
                         if (winner == 0):winner = tttWinCheck()
