@@ -234,6 +234,14 @@ def parsemsg(info, msg, sender):
                 ' :Command help: Tic-Tac-Toe. ' + \
                 'To start a new game: !ttt 0\n'
 
+        if cmd[0] == "!add_admin" and sender in ADMINS:
+            try:
+                user_to_add = cmd[1]
+                ADMINS.append(user_to_add)
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Specify a user\n'
+
 # To-do: decipher the meaning behind this special command and rewrite it more
 #   legibly
 # To-do: make a similar useful special command
