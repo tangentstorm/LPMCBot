@@ -307,6 +307,18 @@ def setConfig():
         add_admin = raw_input("ADMIN: ")
         ADMINS.append(add_admin)
         print "Thank you. Starting up the bot.\n"
+    # -- Config file settings --
+    elif ('c' in flags or '--config' in long_args) and len(argv) >= 3:
+        config_name = argv[2]
+        import ConfigParser
+        config = ConfigParser.RawConfigParser()
+        config.read(config_name)
+        NICK = config.get('MAIN', 'NICK')
+        USER = config.get('MAIN', 'USER')
+        REALNAME = config.get('MAIN', 'REALNAME')
+        CHANNEL = config.get('MAIN', 'CHANNEL')
+        ADMINS = config.get('MAIN', 'ADMINS').split(',')
+        print "Startup Settings retrieved from config file"
     else:
         try:
             # Check for environment variables
@@ -323,6 +335,7 @@ def setConfig():
             REALNAME = "LPMCBot"
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
+
 
     # -- Logging settings --
     if 'l' in flags or '--log' in long_args:
