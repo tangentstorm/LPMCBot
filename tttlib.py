@@ -43,37 +43,37 @@ def tttWin():
         for innerCount in outerCount:
             #The diagonal scenarios
             if (4 == len(outerCount)):
-                if (TICTACTOE[4] == TICTACTOE[innerCount] and 0 == innerCount):
-                    return 8
-                if (TICTACTOE[4] == TICTACTOE[innerCount] and 2 == innerCount):
-                    return 6
-                if (TICTACTOE[4] == TICTACTOE[innerCount] and 6 == innerCount):
-                    return 2
-                if (TICTACTOE[4] == TICTACTOE[innerCount] and 8 == innerCount):
-                    return 0
+                if (TICTACTOE[4] == TICTACTOE[innerCount] and 0 == innerCount and "_" == TICTACTOE[8] and "_" != TICTACTOE[4]):
+                    return 9
+                if (TICTACTOE[4] == TICTACTOE[innerCount] and 2 == innerCount and "_" == TICTACTOE[6] and "_" != TICTACTOE[4]):
+                    return 7
+                if (TICTACTOE[4] == TICTACTOE[innerCount] and 6 == innerCount and "_" == TICTACTOE[2] and "_" != TICTACTOE[4]):
+                    return 3
+                if (TICTACTOE[4] == TICTACTOE[innerCount] and 8 == innerCount and "_" == TICTACTOE[0] and "_" != TICTACTOE[4]):
+                    return 1
             #The vertical and horizontal scenarios
             else:
                 #The horizontal scenarios
                 if (3 == outerCount[1]): 
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+1] and "_" != TICTACTOE[innerCount]):
-                        return innerCount+2
-                    if (TICTACTOE[innerCount+1] == TICTACTOE[innerCount+2] and "_" != TICTACTOE[innerCount+1]):
-                        return innerCount
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+2] and "_" != TICTACTOE[innerCount]):
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+1] and "_" != TICTACTOE[innerCount] and "_" == TICTACTOE[innerCount+2]):
+                        return innerCount+3
+                    if (TICTACTOE[innerCount+1] == TICTACTOE[innerCount+2] and "_" != TICTACTOE[innerCount+1] and "_" == TICTACTOE[innerCount]):
                         return innerCount+1
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+2] and "_" != TICTACTOE[innerCount] and "_" == TICTACTOE[innerCount+1]):
+                        return innerCount+2
                 #The vertical scenarios
                 if (1 == outerCount[1]):
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+3] and "_" != TICTACTOE[innerCount]):
-                        return innerCount+6
-                    if (TICTACTOE[innerCount+3] == TICTACTOE[innerCount+6] and "_" != TICTACTOE[innerCount+3]):
-                        return innerCount
-                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+6] and "_" != TICTACTOE[innerCount]):
-                        return innerCount+3
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+3] and "_" != TICTACTOE[innerCount] and "_" == TICTACTOE[innerCount+6]):
+                        return innerCount+7
+                    if (TICTACTOE[innerCount+3] == TICTACTOE[innerCount+6] and "_" != TICTACTOE[innerCount+3] and "_" == TICTACTOE[innerCount]):
+                        return innerCount+1
+                    if (TICTACTOE[innerCount] == TICTACTOE[innerCount+6] and "_" != TICTACTOE[innerCount] and "_" == TICTACTOE[innerCount+3]):
+                        return innerCount+4
     return -1
     
 def tttCenter():
     #Returns the center square
-    if ("_" == TICTACTOE[5]):
+    if ("_" == TICTACTOE[4]):
         return 5
     else:
         return -1
@@ -83,7 +83,7 @@ def tttCorner():
     checkList = [0,2,6,8]
     for check in checkList:
         if ("_" == TICTACTOE[check]):
-            return check
+            return check+1
     return -1
     
 def tttEdge():
@@ -91,6 +91,6 @@ def tttEdge():
     checkList = [1,3,5,7]
     for check in checkList:
         if ("_" == TICTACTOE[check]):
-            return check
+            return check+1
     return -1
     

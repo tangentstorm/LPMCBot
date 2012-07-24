@@ -1,3 +1,5 @@
+import sys
+import os
 import random
 import socket
 import re
@@ -178,9 +180,10 @@ def parsemsg(info, msg, sender):
                         output_lines.append(TICTACTOE[i])
                     winner = tttWinCheck()
                     if (len(availableSpaces) and winner == 0):          #the following handles bot's move
+                        print str(TICTACTOE)
                         botPick = tttAI()
-                        TICTACTOE[availableSpaces[botPick] - 1] = 'X'
-                        availableSpaces.remove(availableSpaces[botPick])
+                        TICTACTOE[botPick - 1] = 'X'
+                        availableSpaces.remove(botPick)
                         for i in range(9):
                             output_lines[i] += TICTACTOE[i]
                         if (winner == 0):winner = tttWinCheck()
@@ -207,8 +210,9 @@ def parsemsg(info, msg, sender):
                     ret = ret + 'PRIVMSG ' + info[2] + ' : The winner is ' + winner + '!\n'
                     for i in range(len(TICTACTOE)):
                         TICTACTOE.pop(0)
-            except:
+            except Exception, err:
             #How-To stuff
+                print str(err)
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Tic-Tac-Toe. ' + \
                 'To start a new game: !ttt 0\n'
