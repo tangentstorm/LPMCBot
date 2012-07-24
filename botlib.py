@@ -90,6 +90,25 @@ def parsemsg(info, msg, sender):
 # The '!die' command makes the bot quit (admin command)
         if cmd[0] == '!die' and sender in ADMINS:
             ret = 'QUIT\n'
+
+# The '!add_admin' command adds an admin
+        if cmd[0] == "!add_admin" and sender in ADMINS:
+            try:
+                user_to_add = cmd[1]
+                ADMINS.append(user_to_add)
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :'+user_to_add+' added as admin\n'
+
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Specify a user\n'
+
+# The '!list_admins' lists all the Admins
+        if cmd[0] == '!list_admins':
+            ret = 'PRIVMSG ' + info[2] + \
+            ' :Admins:'+ ", ".join(ADMINS) + '\n'
+        else:
+            print 'not !list'
 # --- End Utilities ---
 
 # The '!calc' command evaluates basic mathematical expressions
@@ -233,14 +252,6 @@ def parsemsg(info, msg, sender):
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Tic-Tac-Toe. ' + \
                 'To start a new game: !ttt 0\n'
-
-        if cmd[0] == "!add_admin" and sender in ADMINS:
-            try:
-                user_to_add = cmd[1]
-                ADMINS.append(user_to_add)
-            except:
-                ret = 'PRIVMSG ' + info[2] + \
-                ' :Command help: Specify a user\n'
 
 # To-do: decipher the meaning behind this special command and rewrite it more
 #   legibly
