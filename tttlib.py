@@ -22,8 +22,8 @@ def tttWinCheck():
     
 def tttAI():
     #Gave the AI the potential to lose so it can be fun, but is still decent.
-    #Returns the numeric value [0-8] of the move it wants to make
-    #based on 0 = top left & 8 = bottom right moving left to right & top to bottom
+    #Returns the numeric value [1-9] of the move it wants to make
+    #based on 1 = top left & 9 = bottom right moving left to right & top to bottom
     win = tttWin()
     if (win != -1):
         return win
@@ -37,6 +37,9 @@ def tttAI():
         return tttEdge()
 
 def tttWin():
+    #Checks for win conditions in the upcoming move (Either for the AI or the player)
+    #and if so, moves to win or block the win, respectively
+    
     #Defines starting positions for all possible win scenarios
     startingPoints = [[0,3,6],[0,1,2],[0,2,6,8]]
     for outerCount in startingPoints:
