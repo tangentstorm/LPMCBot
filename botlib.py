@@ -1,3 +1,5 @@
+import sys
+import os
 import random
 import socket
 import re
@@ -6,34 +8,13 @@ import ConfigParser
 from os import environ, makedirs
 from math import *
 from time import strftime
+from tttlib import *
 
 # Admin name(s) for certain commands
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
 ADMINS = ["SlimTim10", "Z_Mass", "intothev01d", "naxir"]
-TICTACTOE = []
-
-
-def tttWinCheck():
-    winner = 0
-    if ((TICTACTOE[0] == TICTACTOE[1]) and (TICTACTOE[1] == TICTACTOE[2]) 
-        and (TICTACTOE[2] != '_')):winner = TICTACTOE[0] 
-    elif ((TICTACTOE[3] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[5]) 
-        and (TICTACTOE[5] != '_')):winner = TICTACTOE[3] 
-    elif ((TICTACTOE[6] == TICTACTOE[7]) and (TICTACTOE[7] == TICTACTOE[8]) 
-        and (TICTACTOE[8] != '_')):winner = TICTACTOE[6] 
-    elif ((TICTACTOE[0] == TICTACTOE[3]) and (TICTACTOE[3] == TICTACTOE[6]) 
-        and (TICTACTOE[6] != '_')):winner = TICTACTOE[0] 
-    elif ((TICTACTOE[1] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[7]) 
-        and (TICTACTOE[7] != '_')):winner = TICTACTOE[1] 
-    elif ((TICTACTOE[2] == TICTACTOE[5]) and (TICTACTOE[5] == TICTACTOE[8]) 
-        and (TICTACTOE[8] != '_')):winner = TICTACTOE[2] 
-    elif ((TICTACTOE[0] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[8]) 
-        and (TICTACTOE[8] != '_')):winner = TICTACTOE[0] 
-    elif ((TICTACTOE[2] == TICTACTOE[4]) and (TICTACTOE[4] == TICTACTOE[6]) 
-        and (TICTACTOE[6] != '_')):winner = TICTACTOE[2] 
-    return winner
 
 def split_privmsg(privmsg):
     # Split the received PRIVMSG message into two useful parts
@@ -42,7 +23,7 @@ def split_privmsg(privmsg):
     parts = privmsg[1:].split(':', 1)
     # The information part of the message (sender, "PRIVMSG", channel/nickname)
     info = parts[0].split(' ')
-    msg = parts[1].rstrip()	# The message part (e.g., "Hello?")
+    msg = parts[1].rstrip()    # The message part (e.g., "Hello?")
     # The sender of the message (e.g., "SlimTim10")
     sender = info[0].split('!')[0]
     return info, msg, sender
@@ -229,9 +210,10 @@ def parsemsg(info, msg, sender):
                         output_lines.append(TICTACTOE[i])
                     winner = tttWinCheck()
                     if (len(availableSpaces) and winner == 0):          #the following handles bot's move
-                        botRandPick = random.randint(0,len(availableSpaces)-1)    
-                        TICTACTOE[availableSpaces[botRandPick] - 1] = 'X'
-                        availableSpaces.remove(availableSpaces[botRandPick])
+                        print str(TICTACTOE)
+                        botPick = tttAI()
+                        TICTACTOE[botPick - 1] = 'X'
+                        availableSpaces.remove(botPick)
                         for i in range(9):
                             output_lines[i] += TICTACTOE[i]
                         if (winner == 0):winner = tttWinCheck()
@@ -258,8 +240,9 @@ def parsemsg(info, msg, sender):
                     ret = ret + 'PRIVMSG ' + info[2] + ' : The winner is ' + winner + '!\n'
                     for i in range(len(TICTACTOE)):
                         TICTACTOE.pop(0)
-            except:
+            except Exception, err:
             #How-To stuff
+                print str(err)
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Tic-Tac-Toe. ' + \
                 'To start a new game: !ttt 0\n'
