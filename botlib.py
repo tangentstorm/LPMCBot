@@ -1,6 +1,7 @@
 import random
 import socket
 import re
+import ConfigParser
 from sys import argv
 from os import environ, makedirs
 from math import *
@@ -310,14 +311,14 @@ def setConfig():
     # -- Config file settings --
     elif ('c' in flags or '--config' in long_args) and len(argv) >= 3:
         config_name = argv[2]
-        import ConfigParser
         config = ConfigParser.RawConfigParser()
         config.read(config_name)
         NICK = config.get('MAIN', 'NICK')
         USER = config.get('MAIN', 'USER')
         REALNAME = config.get('MAIN', 'REALNAME')
         CHANNEL = config.get('MAIN', 'CHANNEL')
-        ADMINS = config.get('MAIN', 'ADMINS').split(',')
+        del ADMINS[:]
+        ADMINS.extend(config.get('MAIN', 'ADMINS').split(','))
         print "Startup Settings retrieved from config file"
     else:
         try:
@@ -335,6 +336,7 @@ def setConfig():
             REALNAME = "LPMCBot"
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
+
 
 
     # -- Logging settings --
