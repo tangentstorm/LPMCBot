@@ -103,12 +103,22 @@ def parsemsg(info, msg, sender):
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Specify a user\n'
 
+# The '!remove_admin' command removes an admin
+        if cmd[0] == "!remove_admin" and sender in ADMINS:
+            try:
+                user_to_remove = cmd[1]
+                ADMINS.remove(user_to_remove)
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :'+user_to_remove+' removed as admin\n'
+
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Specify an admin\n'
+
 # The '!list_admins' lists all the Admins
         if cmd[0] == '!list_admins':
             ret = 'PRIVMSG ' + info[2] + \
             ' :Admins:'+ ", ".join(ADMINS) + '\n'
-        else:
-            print 'not !list'
 # --- End Utilities ---
 
 # The '!calc' command evaluates basic mathematical expressions
