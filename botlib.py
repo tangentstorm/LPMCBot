@@ -234,10 +234,10 @@ def parsemsg(info, msg, sender):
                 ' :Command help: Tic-Tac-Toe. ' + \
                 'To start a new game: !ttt 0\n'
 
-# To-do: decipher the meaning behind this special command and rewrite it more
-#   legibly
-# To-do: make a similar useful special command
-    # regex to match basic websites.
+    # The following shall look for websites posted in chat. It will then
+    # obtain the Title of the page and return a message to the user to be sent
+
+    # The following is a regex to match basic websites.
     # group(1) shall be the server address
     # group(2) shall be the page to request
     # TODO: This regex will not match the following example sites:
