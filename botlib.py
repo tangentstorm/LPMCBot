@@ -2,6 +2,7 @@ import random
 import socket
 import re
 from sys import argv, exc_info
+import ConfigParser
 from os import environ, makedirs
 from math import *
 from time import strftime
@@ -90,6 +91,35 @@ def parsemsg(info, msg, sender):
 # The '!die' command makes the bot quit (admin command)
         if cmd[0] == '!die' and sender in ADMINS:
             ret = 'QUIT\n'
+
+# The '!add_admin' command adds an admin
+        if cmd[0] == "!add_admin" and sender in ADMINS:
+            try:
+                user_to_add = cmd[1]
+                ADMINS.append(user_to_add)
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :'+user_to_add+' added as admin\n'
+
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Specify a user\n'
+
+# The '!remove_admin' command removes an admin
+        if cmd[0] == "!remove_admin" and sender in ADMINS:
+            try:
+                user_to_remove = cmd[1]
+                ADMINS.remove(user_to_remove)
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :'+user_to_remove+' removed as admin\n'
+
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Specify an admin\n'
+
+# The '!list_admins' lists all the Admins
+        if cmd[0] == '!list_admins':
+            ret = 'PRIVMSG ' + info[2] + \
+            ' :Admins:'+ ", ".join(ADMINS) + '\n'
 # --- End Utilities ---
 
 # The '!calc' command evaluates basic mathematical expressions
@@ -315,6 +345,18 @@ def setConfig():
         add_admin = raw_input("ADMIN: ")
         ADMINS.append(add_admin)
         print "Thank you. Starting up the bot.\n"
+    # -- Config file settings --
+    elif ('c' in flags or '--config' in long_args) and len(argv) >= 3:
+        config_name = argv[2]
+        config = ConfigParser.RawConfigParser()
+        config.read(config_name)
+        NICK = config.get('MAIN', 'NICK')
+        USER = config.get('MAIN', 'USER')
+        REALNAME = config.get('MAIN', 'REALNAME')
+        CHANNEL = config.get('MAIN', 'CHANNEL')
+        del ADMINS[:]
+        ADMINS.extend(config.get('MAIN', 'ADMINS').split(','))
+        print "Startup Settings retrieved from config file"
     else:
         try:
             # Check for environment variables
@@ -331,6 +373,8 @@ def setConfig():
             REALNAME = "LPMCBot"
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
+
+
 
     # -- Logging settings --
     if 'l' in flags or '--log' in long_args:
