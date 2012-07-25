@@ -18,6 +18,10 @@ The bot can be started in a few ways:
         EXAMPLE:
             'NICK="MyNick" USER="MyUser" CHANNEL="#MyChannel" python2 lpmcbot.py'
 
+    - Config File
+        Start the bot with '-c' or '--config' and follow with the config file name
+        EXAMPLE: 'python2 lpmcbot.py -c exampleconfig.cfg'
+
     - Default Values
         If no argument is passed and no environment variables are found, the bot
         will use the default values.
