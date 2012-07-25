@@ -3,8 +3,8 @@ import os
 import random
 import socket
 import re
-from sys import argv, exc_info
 import ConfigParser
+from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
 from time import strftime
@@ -251,8 +251,8 @@ def parsemsg(info, msg, sender):
     # obtain the Title of the page and return a message to the user to be sent
 
     # The following is a regex to match basic websites.
-    # group(1) shall be the server address
-    # group(2) shall be the page to request
+    # group(1) shall be the server address (e.g. www.reddit.com)
+    # group(2) shall be the page to request (e.g. /r/lpmc)
     # TODO: This regex will not match the following example sites:
     #       http://m.reddit.com, http://www.google.co.uk
     website = re.match('^http://((?:www\.)?\w+\.\w{2,3})(/.*)?',msg)
@@ -268,10 +268,9 @@ def parsemsg(info, msg, sender):
             # if no specific page is specified after domain, request /
             if website.group(2) == None:
                 sock.send('GET / HTTP/1.0\r\n')
-                sock.send('HOST: ' + website.group(1) + '\r\n\r\n')
             else:
                 sock.send('GET ' +website.group(2)+' HTTP/1.0\r\n')
-                sock.send('HOST: ' + website.group(1) + website.group(2) + '\r\n\r\n')
+            sock.send('HOST: ' + website.group(1) + '\r\n\r\n')
             # This will store the full page when we are finished
             source = ''
             # buff shall store 512 bytes of the page at a time
