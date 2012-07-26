@@ -301,18 +301,27 @@ def parsemsg(info, msg, sender):
 # looks up definition of -word- from google dictionary, returns as a string
 def lookup(word):
     try:
+        # loads json page to 'page' from a search to google for 'word'
         url="http://www.google.com/dictionary/json?callback=s&q="+word+"&sl=en&tl=en&restrict=pr,de&client=te"
         page=urllib.urlopen(url);
     except:
         return "Problem looking up word..."
+    # reads content, ignoring first 2 and last 10 chars (because they mess up the tree structure)
     content=page.read()[2:-10]
     page.close()
+
+    # converts content to a dict, which holds all the valuable information
     dic=ast.literal_eval(content)
+
+    # tests whether the page is for a definition or not
     if dic.has_key("webDefinitions"):
+        # picks the first entry
         webdef=dic["webDefinitions"][0]["entries"][0]
-        if webdef["type"]=="meaning":
-            word_def=webdef["terms"][0]['text'].split(';')[0].strip().replace("&#39","'").replace("&quot", "")
-            return word_def
+        # picks out just the definition
+        word_def=webdef["terms"][0]['text'].split(';')[0]
+        # formats definition for output
+        word_def.strip().replace("&#39","'").replace("&quot", "")
+        return word_def
     else:
         return "Definition unavailable"
 
