@@ -4,6 +4,9 @@ import random
 import socket
 import re
 import ConfigParser
+import urllib
+import ast
+import sys
 from sys import argv
 from os import environ, makedirs
 from math import *
@@ -247,6 +250,16 @@ def parsemsg(info, msg, sender):
                 ' :Command help: Tic-Tac-Toe. ' + \
                 'To start a new game: !ttt 0\n'
 
+        if cmd[0] == "!lookup":
+            try:
+                definition = lookup(cmd[1])
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :'+cmd[1]+': '+definition+'\n'
+
+            except:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Specify a word\n'
+
 # To-do: decipher the meaning behind this special command and rewrite it more
 #   legibly
 # To-do: make a similar useful special command
@@ -284,6 +297,24 @@ def parsemsg(info, msg, sender):
         x.close()
 
     return ret            # Return the appropriate string
+
+# looks up definition of -word- from google dictionary, returns as a string
+def lookup(word):
+    try:
+        url="http://www.google.com/dictionary/json?callback=s&q="+word+"&sl=en&tl=en&restrict=pr,de&client=te"
+        page=urllib.urlopen(url);
+    except:
+        return "Problem looking up word..."
+    content=page.read()[2:-10]
+    page.close()
+    dic=ast.literal_eval(content)
+    if dic.has_key("webDefinitions"):
+        webdef=dic["webDefinitions"][0]["entries"][0]
+        if webdef["type"]=="meaning":
+            word_def=webdef["terms"][0]['text'].split(';')[0].strip().replace("&#39","'").replace("&quot", "")
+            return word_def
+    else:
+        return "Definition unavailable"
 
 
 def setConfig():
