@@ -320,8 +320,8 @@ def lookup(word):
         # picks out just the definition
         word_def=webdef["terms"][0]['text'].split(';')[0]
         # formats definition for output
-        word_def.strip().replace("&#39","'").replace("&quot", "")
-        return word_def
+        plain_def = word_def.strip().replace("&#39","'").replace("&quot", "")
+        return plain_def
     else:
         return "Definition unavailable"
 
