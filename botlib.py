@@ -253,7 +253,7 @@ def parsemsg(info, msg, sender):
     # The following is a regex to match basic websites.
     # group(1) shall be the server address (e.g. www.reddit.com)
     # group(2) shall be the page to request (e.g. /r/lpmc)
-    # TODO: This regex will not match the following example sites:
+    # Note: This regex will not match the following example sites:
     #       http://m.reddit.com, http://www.google.co.uk
     website = re.match('^http://((?:www\.)?\w+\.\w{2,3})(/.*)?',msg)
     if website:
