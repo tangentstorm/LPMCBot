@@ -337,7 +337,7 @@ def setConfig():
         REALNAME = config.get('MAIN', 'REALNAME')
         CHANNEL = config.get('MAIN', 'CHANNEL')
         del ADMINS[:]
-        ADMINS.extend(config.get('MAIN', 'ADMINS').split(','))
+        ADMINS.extend(config.get('MAIN', 'ADMINS').replace(' ', '').split(','))
         print "Startup Settings retrieved from config file"
     else:
         try:
