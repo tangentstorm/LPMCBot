@@ -9,12 +9,17 @@ from os import environ, makedirs
 from math import *
 from time import strftime
 from tttlib import *
+from time import localtime, strftime
 
 # Admin name(s) for certain commands
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
 ADMINS = ["SlimTim10", "Z_Mass", "intothev01d", "naxir"]
+
+# records when users were last seen
+# Key: username ; Value: time last seen
+last_seen = {}
 
 def split_privmsg(privmsg):
     # Split the received PRIVMSG message into two useful parts
@@ -26,6 +31,10 @@ def split_privmsg(privmsg):
     msg = parts[1].rstrip()    # The message part (e.g., "Hello?")
     # The sender of the message (e.g., "SlimTim10")
     sender = info[0].split('!')[0]
+
+    if(info[1] == 'PRIVMSG'):
+        last_seen[sender] = localtime() # updates the last time user has been seen
+
     return info, msg, sender
 
 def parsemsg(info, msg, sender):
@@ -102,6 +111,20 @@ def parsemsg(info, msg, sender):
             ret = 'PRIVMSG ' + info[2] + \
             ' :Admins:'+ ", ".join(ADMINS) + '\n'
 # --- End Utilities ---
+
+# The !seen commmand returns the last time a user posted
+        if cmd[0] == '!seen':
+            if len(cmd) > 1:
+                try:
+                    ret = 'PRIVMSG ' + info[2] + \
+                    ' :' + cmd[1] + ' last seen ' + strftime("%B %d, %Y @ %I:%M %p %Z", last_seen[cmd[1]]) + '\n'
+                except:
+                    ret = 'PRIVMSG ' + info[2] + \
+                    ' :Error: User has not been seen\n'
+            else:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Please specify user: "!seen <user>"\n'
+
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
