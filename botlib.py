@@ -7,7 +7,7 @@ import ConfigParser
 import urllib
 import ast
 import sys
-from sys import argv
+from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
 from time import strftime
@@ -163,21 +163,28 @@ def parsemsg(info, msg, sender):
 # The !rps command initializes a game of rock-paper-scissors.
         if cmd[0] == '!rps':
             try:
+                # User inputs an integer 0 through 2 that is an index to the list of choices
                 user_rps = int(cmd[1])
+                # Exception if any int other than 0, 1, or 2
                 if user_rps < 0 or user_rps > 2:
                     raise Exception("Invalid")
                 else:
+                    # The list that the index integers correspond to
                     rps_names = ['rock', 'paper', 'scissors']
+                    # Bot produces a random integer 0 through 2
                     bot_rps = random.randint(0, 2)
+                    # Produces a message with the results of the player's choice and the bot's random int
                     ret = 'PRIVMSG ' + info[2] + ' :Player chose ' + \
                     rps_names[user_rps] + '. LPMCBot chose ' + \
                     rps_names[bot_rps] + '. '
+                    # The result of the game is dsplayed 
                     if user_rps == bot_rps:
                         ret += 'Tie game.\n'
                     elif user_rps == (bot_rps + 1) % 3:
                         ret += 'Player wins!\n'
                     else:
                         ret += 'Player loses.\n'
+            # Exception raised if not an int. Displays help message and example.
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
@@ -259,42 +266,48 @@ def parsemsg(info, msg, sender):
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Specify a word\n'
+    # The following shall look for websites posted in chat. It will then
+    # obtain the Title of the page and return a message to the user to be sent
 
-# To-do: decipher the meaning behind this special command and rewrite it more
-#   legibly
-# To-do: make a similar useful special command
-    m =     re.compile(r'^'+chr(104)+chr(0x74)+chr(116)+chr(0x70)+chr(0x3A)+ \
-            chr(47)+'\/('+chr(0x77)+'w'+chr(119)+'\.){0,1}(\w+)\.(\w{2,3})'+ \
-            '(\/.*){0,1}').match(msg)
-    if m:
-        x = socket.socket()
+    # The following is a regex to match basic websites.
+    # group(1) shall be the server address (e.g. www.reddit.com)
+    # group(2) shall be the page to request (e.g. /r/lpmc)
+    # Note: This regex will not match the following example sites:
+    #       http://m.reddit.com, http://www.google.co.uk
+    website = re.match('^http://((?:www\.)?\w+\.\w{2,3})(/.*)?',msg)
+    if website:
+        # creates socket object
+        sock = socket.socket()
         try:
-            if m.group(1) == None:
-                h = m.group(2)+'.'+m.group(3)
+            # Connect to webserver on port 80
+            sock.connect((website.group(1), 80))
+            # Connection will timeout after 5 seconds. This was initially set
+            # to 1 second, but frequent timeouts were experienced.
+            sock.settimeout(5)
+            # if no specific page is specified after domain, request /
+            if website.group(2) == None:
+                sock.send('GET / HTTP/1.0\r\n')
             else:
-                h = m.group(1)+m.group(2)+'.'+m.group(3)
-            x.connect((h, 0x50))
-            x.settimeout(1)
-            ohcomeon = chr(71)+chr(0x45)+chr(0124)
-            reallynow = chr(0110)+chr(84)+chr(0x54)+chr(0120)
-            if m.group(4) == None:
-                x.send(ohcomeon+' / '+reallynow+'/1.0\r\n')
-            else:
-                x.send(ohcomeon+' '+m.group(4)+' '+reallynow+'/1.0\r\n')
-            oklastone = chr(0x48)+chr(0x4F)+chr(0123)+chr(336>>2)
-            x.send(oklastone+': '+h+'\r\n\r\n')
-            d = ''
-            y = x.recv(512)
-            while y != '':
-                d += y
-                y = x.recv(512)
-            m =     re.compile(r'.*<'+chr(0x74)+'i'+chr(0x74)+'le>(.+)</'+ \
-                    chr(0x74)+'i'+chr(0x74)+'le>.*', re.DOTALL).match(d)
-            ret =   'PRIVMSG ' + info[2] + ' :Ti'+chr(0x74)+'l'+chr(0x65)+ \
-                    ': ' + m.group(1) + '\n'
+                sock.send('GET ' +website.group(2)+' HTTP/1.0\r\n')
+            sock.send('HOST: ' + website.group(1) + '\r\n\r\n')
+            # This will store the full page when we are finished
+            source = ''
+            # buff shall store 512 bytes of the page at a time
+            buff = sock.recv(512)
+            # keep receiving information, storing into the buffer, and then
+            # concatenating source until buff == ''
+            while buff != '':
+                source += buff
+                buff = sock.recv(512)
+            # find the title of the page.
+            titleRegex = re.compile('.*<title>(.+)</title>.*', 
+                                    re.DOTALL).match(source)
+            # and finally, set ret to equal our message reporting our findings.
+            ret =   'PRIVMSG ' + info[2] + ' :Title: ' + titleRegex.group(1) + '\n'
         except:
+            print "Error:", exc_info()[0] # in case of exception, print error.
             pass
-        x.close()
+        sock.close()
 
     return ret            # Return the appropriate string
 
@@ -370,7 +383,7 @@ def setConfig():
         REALNAME = config.get('MAIN', 'REALNAME')
         CHANNEL = config.get('MAIN', 'CHANNEL')
         del ADMINS[:]
-        ADMINS.extend(config.get('MAIN', 'ADMINS').split(','))
+        ADMINS.extend(config.get('MAIN', 'ADMINS').replace(' ', '').split(','))
         print "Startup Settings retrieved from config file"
     else:
         try:
