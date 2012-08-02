@@ -12,6 +12,7 @@ from os import environ, makedirs
 from math import *
 from time import strftime, localtime
 from tttlib import *
+from datetime import datetime
 
 # Admin name(s) for certain commands
 # Usage:
@@ -296,6 +297,26 @@ def parsemsg(info, msg, sender):
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: Specify a word\n'
+
+# The '!uptime' command returns the total time the bot has been running
+        if cmd[0] == '!uptime':
+            # Subtracts current time from time connection was opened
+            now = datetime.now()
+            uptime = now - connection_time
+            
+            # Converts timedelta into individual days, hours, etc.
+            days_passed = int(uptime.days)
+            hours_passed = int(uptime.seconds / 3600)
+            minutes_passed = int((uptime.seconds / 60) % 60)
+            seconds_passed = int(uptime.seconds % 60)
+            
+            # Returns the formatted string
+            ret = 'PRIVMSG ' + info[2] + ' :Current Uptime: '+ \
+            str(days_passed) + ' days ' + \
+            str(hours_passed) + ' hours ' + \
+            str(minutes_passed) + ' minutes and ' + \
+            str(seconds_passed) + ' seconds.' + '\n'
+
     # The following shall look for websites posted in chat. It will then
     # obtain the Title of the page and return a message to the user to be sent
 
@@ -431,7 +452,9 @@ def setConfig():
             REALNAME = "LPMCBot"
             CHANNEL  = "#LPMCBot"
             print "Initializing using default values.\n"
-
+    # Stores the connection time for '!uptime' command        
+    global connection_time
+    connection_time = datetime.now()
 
 
     # -- Logging settings --
