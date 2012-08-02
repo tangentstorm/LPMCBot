@@ -22,6 +22,8 @@ ADMINS = ["SlimTim10", "Z_Mass", "intothev01d", "naxir"]
 # records when users were last seen
 # Key: username ; Value: time last seen
 last_seen = {}
+# maximum number of users allowed in last_seen
+seen_limit = 100
 
 def split_privmsg(privmsg):
     # Split the received PRIVMSG message into two useful parts
@@ -38,8 +40,13 @@ def split_privmsg(privmsg):
 
 def parsemsg(info, msg, sender):
 
-    if(info[1] == 'PRIVMSG'):
-        last_seen[sender] = localtime() # updates the last time user has been seen
+#updates last_seen dict (and limits how big it can be)
+    if info[1] == 'PRIVMSG':
+        last_seen[sender] = localtime() # updates a user's latest time if already in list
+        
+        if len(last_seen) > seen_limit: # removes oldest user in a full lsit
+            oldest_user = min(last_seen, key=last_seen.get)
+            del last_seen[oldest_user]
 
 # The string to be returned
     ret = ''
