@@ -275,13 +275,10 @@ def parsemsg(info, msg, sender):
             uptime = now - connection_time
             
             # Converts timedelta into individual days, hours, etc.
-            days_passed = int(uptime.total_seconds() / 86400)
-            days_remainder = int(uptime.total_seconds() % 86400)
-            hours_passed = int(days_remainder / 3600)
-            hours_remainder = int(days_remainder % 3600)
-            minutes_passed = int(hours_remainder / 60)
-            minutes_remainder = int(hours_remainder % 60)
-            seconds_passed = int(minutes_remainder % 60)
+            days_passed = int(uptime.days)
+            hours_passed = int(uptime.seconds / 3600)
+            minutes_passed = int((uptime.seconds / 60) % 60)
+            seconds_passed = int(uptime.seconds % 60)
             
             # Returns the formatted string
             ret = 'PRIVMSG ' + info[2] + ' :Current Uptime: '+ \
