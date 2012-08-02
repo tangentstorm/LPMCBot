@@ -31,12 +31,13 @@ def split_privmsg(privmsg):
     # The sender of the message (e.g., "SlimTim10")
     sender = info[0].split('!')[0]
 
-    if(info[1] == 'PRIVMSG'):
-        last_seen[sender] = localtime() # updates the last time user has been seen
-
     return info, msg, sender
 
 def parsemsg(info, msg, sender):
+
+    if(info[1] == 'PRIVMSG'):
+        last_seen[sender] = localtime() # updates the last time user has been seen
+    
 # The string to be returned
     ret = ''
 # Treat messages starting with '!' as commands (e.g., "!say hi")
