@@ -183,21 +183,28 @@ def parsemsg(info, msg, sender):
 # The !rps command initializes a game of rock-paper-scissors.
         if cmd[0] == '!rps':
             try:
+                # User inputs an integer 0 through 2 that is an index to the list of choices
                 user_rps = int(cmd[1])
+                # Exception if any int other than 0, 1, or 2
                 if user_rps < 0 or user_rps > 2:
                     raise Exception("Invalid")
                 else:
+                    # The list that the index integers correspond to
                     rps_names = ['rock', 'paper', 'scissors']
+                    # Bot produces a random integer 0 through 2
                     bot_rps = random.randint(0, 2)
+                    # Produces a message with the results of the player's choice and the bot's random int
                     ret = 'PRIVMSG ' + info[2] + ' :Player chose ' + \
                     rps_names[user_rps] + '. LPMCBot chose ' + \
                     rps_names[bot_rps] + '. '
+                    # The result of the game is dsplayed 
                     if user_rps == bot_rps:
                         ret += 'Tie game.\n'
                     elif user_rps == (bot_rps + 1) % 3:
                         ret += 'Player wins!\n'
                     else:
                         ret += 'Player loses.\n'
+            # Exception raised if not an int. Displays help message and example.
             except:
                 ret = 'PRIVMSG ' + info[2] + \
                 ' :Command help: 0 = Rock, 1 = Paper, 2 = Scissors. ' + \
