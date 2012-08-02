@@ -7,9 +7,8 @@ import ConfigParser
 from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
-from time import strftime
+from time import strftime, localtime
 from tttlib import *
-from time import localtime, strftime
 
 # Admin name(s) for certain commands
 # Usage:
