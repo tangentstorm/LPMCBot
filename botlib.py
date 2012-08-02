@@ -37,7 +37,7 @@ def parsemsg(info, msg, sender):
 
     if(info[1] == 'PRIVMSG'):
         last_seen[sender] = localtime() # updates the last time user has been seen
-    
+
 # The string to be returned
     ret = ''
 # Treat messages starting with '!' as commands (e.g., "!say hi")
@@ -115,10 +115,10 @@ def parsemsg(info, msg, sender):
 # The !seen commmand returns the last time a user posted
         if cmd[0] == '!seen':
             if len(cmd) > 1:
-                try:
+                if cmd[1] in last_seen:
                     ret = 'PRIVMSG ' + info[2] + \
                     ' :' + cmd[1] + ' last seen ' + strftime("%B %d, %Y @ %I:%M %p %Z", last_seen[cmd[1]]) + '\n'
-                except:
+                else:
                     ret = 'PRIVMSG ' + info[2] + \
                     ' :Error: User has not been seen\n'
             else:
