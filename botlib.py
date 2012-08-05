@@ -10,7 +10,7 @@ import sys
 from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
-from time import strftime
+from time import strftime, localtime
 from tttlib import *
 from datetime import datetime
 
@@ -19,6 +19,12 @@ from datetime import datetime
 #       if sender in ADMINS:
 #           myfunc()
 ADMINS = ["SlimTim10", "Z_Mass", "intothev01d", "naxir"]
+
+# records when users were last seen
+# Key: username ; Value: time last seen
+last_seen = {}
+# maximum number of users allowed in last_seen
+seen_limit = 100
 
 def split_privmsg(privmsg):
     # Split the received PRIVMSG message into two useful parts
@@ -30,9 +36,19 @@ def split_privmsg(privmsg):
     msg = parts[1].rstrip()    # The message part (e.g., "Hello?")
     # The sender of the message (e.g., "SlimTim10")
     sender = info[0].split('!')[0]
+
     return info, msg, sender
 
 def parsemsg(info, msg, sender):
+
+#updates last_seen dict (and limits how big it can be)
+    if info[1] == 'PRIVMSG':
+        last_seen[sender] = localtime() # updates a user's latest time if already in list
+        
+        if len(last_seen) > seen_limit: # removes oldest user in a full lsit
+            oldest_user = min(last_seen, key=last_seen.get)
+            del last_seen[oldest_user]
+
 # The string to be returned
     ret = ''
 # Treat messages starting with '!' as commands (e.g., "!say hi")
@@ -106,6 +122,20 @@ def parsemsg(info, msg, sender):
             ret = 'PRIVMSG ' + info[2] + \
             ' :Admins:'+ ", ".join(ADMINS) + '\n'
 # --- End Utilities ---
+
+# The !seen commmand returns the last time a user posted
+        if cmd[0] == '!seen':
+            if len(cmd) > 1:
+                if cmd[1] in last_seen:
+                    ret = 'PRIVMSG ' + info[2] + \
+                    ' :' + cmd[1] + ' last seen ' + strftime("%B %d, %Y @ %I:%M %p %Z", last_seen[cmd[1]]) + '\n'
+                else:
+                    ret = 'PRIVMSG ' + info[2] + \
+                    ' :Error: User has not been seen\n'
+            else:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: Please specify user: "!seen <user>"\n'
+
 
 # The '!calc' command evaluates basic mathematical expressions
         if cmd[0] == '!calc':
