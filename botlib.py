@@ -190,7 +190,6 @@ def parsemsg(info, msg, sender):
             # Return the insult
             ret = 'PRIVMSG ' + info[2] + ' :' + choice + '\n'
 
-# To-do: add helpful comments to this command's code
 # The !rps command initializes a game of rock-paper-scissors.
         if cmd[0] == '!rps':
             try:
