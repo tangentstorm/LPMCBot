@@ -6,7 +6,6 @@ import re
 import ConfigParser
 import urllib
 import ast
-import sys
 from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
