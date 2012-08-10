@@ -316,6 +316,31 @@ def parsemsg(info, msg, sender):
             str(minutes_passed) + ' minutes and ' + \
             str(seconds_passed) + ' seconds.' + '\n'
 
+# The '!help' command lists commands available to users
+        if cmd[0] == '!help':
+            ret = 'PRIVMSG ' + info[2] + ' :Current available commands:\n' + \
+                  'PRIVMSG ' + info[2] + ' :Command       |Use                                     |Example\n'         + \
+                  'PRIVMSG ' + info[2] + ' ================================================================\n'         + \
+                  'PRIVMSG ' + info[2] + ' :!say          |Makes the bot print a message           |"!say Hello"\n'    + \
+                  'PRIVMSG ' + info[2] + ' :!list_admins  |Lists current administrators            |\n'                + \
+                  'PRIVMSG ' + info[2] + ' :!seen         |Prints last time a user was seen        |"!seen <user>"\n'  + \
+                  'PRIVMSG ' + info[2] + ' :!calc         |Performs basic calculations             |"!calc 2+2"\n'     + \
+                  'PRIVMSG ' + info[2] + ' :!insult       |Prints a random insult                  |\n'                + \
+                  'PRIVMSG ' + info[2] + ' :!rps          |Begins a game of Rock-Paper-Scissors    |"!rps 0"\n'        + \
+                  'PRIVMSG ' + info[2] + ' :!ttt          |Begins a game of tic tac toe            |"!ttt 5"\n'        + \
+                  'PRIVMSG ' + info[2] + ' :!uptime       |Shows how long the bot has been running |\n'
+# The !admin_help command lists commands available only to admins
+        if cmd[0] == '!admin_help' and sender in ADMINS:
+            ret = 'PRIVMSG ' + info[2] + ' :Admin only commands:\n'+ \
+                  'PRIVMSG ' + info[2] + ' :Command       |Use                                     |Example\n'               + \
+                  'PRIVMSG ' + info[2] + ' ================================================================\n'               + \
+                  'PRIVMSG ' + info[2] + ' :!add_admin    |Adds a user as an admin                 |"!add_admin <user>\n'    + \
+                  'PRIVMSG ' + info[2] + ' :!remove_admin |Removes a user from admin status        |"!remove_admin <user>\n' + \
+                  'PRIVMSG ' + info[2] + ' :!die          |kills the bot                           |\n'                      
+                       
+                  
+            
+
     # The following shall look for websites posted in chat. It will then
     # obtain the Title of the page and return a message to the user to be sent
 
