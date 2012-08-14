@@ -92,6 +92,23 @@ def parsemsg(info, msg, sender):
         if cmd[0] == '!die' and sender in ADMINS:
             ret = 'QUIT\n'
 
+# The '!kick' command kicks a user from the channel (with an optional message)
+        if cmd[0] == '!kick' and sender in ADMINS:
+            if len(cmd) == 2:
+                kick_params = cmd[1].split()
+                
+                # Start building the return message with KICK channel user 
+                ret = 'KICK ' + info[2] + ' ' + kick_params[0] 
+
+                # Add the kick message if one is given
+                if len(kick_params) > 1:
+                    ret += ' :' + ' '.join(kick_params[1:])
+
+                ret += '\n'
+            else:
+                ret = 'PRIVMSG ' + info[2] + \
+                ' :Command help: !kick <user> [<message>]\n'
+
 # The '!add_admin' command adds an admin
         if cmd[0] == "!add_admin" and sender in ADMINS:
             try:
