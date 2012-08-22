@@ -17,7 +17,7 @@ from datetime import datetime
 # Usage:
 #       if sender in ADMINS:
 #           myfunc()
-ADMINS = ["SlimTim10", "Z_Mass", "intothev01d", "naxir"]
+ADMINS = ["SlimTim10", "jfredett", "intothev01d"]
 
 # records when users were last seen
 # Key: username ; Value: time last seen
@@ -490,7 +490,7 @@ def setConfig():
             NICK     = "LPMCBot"
             USER     = "LPMCbot"
             REALNAME = "LPMCBot"
-            CHANNEL  = "#LPMCBot"
+            CHANNEL  = "#LPMC"
             print "Initializing using default values.\n"
     # Stores the connection time for '!uptime' command        
     global connection_time
