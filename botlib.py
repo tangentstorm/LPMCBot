@@ -393,8 +393,10 @@ def parsemsg(info, msg, sender):
             # find the title of the page.
             titleRegex = re.compile('.*<title>(.+)</title>.*', 
                                     re.DOTALL).match(source)
+            # remove preceding and trailing whitespace from the title
+            titleStr = titleRegex.group(1).strip()
             # and finally, set ret to equal our message reporting our findings.
-            ret =   'PRIVMSG ' + info[2] + ' :Title: ' + titleRegex.group(1) + '\n'
+            ret =   'PRIVMSG ' + info[2] + ' :Title: ' + titleStr + '\n'
         except:
             print "Error:", exc_info()[0] # in case of exception, print error.
             pass
