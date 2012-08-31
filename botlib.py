@@ -338,7 +338,7 @@ def parsemsg(info, msg, sender):
             if len(cmd) == 1:
                 ret = 'PRIVMSG ' + info[2] + \
                       ' :Current available commands:' + \
-                      ' {!say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime}. ' + \
+                      ' {!say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime} ' + \
                       ' To get further information on a command use "!help <command>". ' + \
                       ' Example: "!help say"\n'
             else:
