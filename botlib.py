@@ -346,38 +346,52 @@ def parsemsg(info, msg, sender):
                     help_cmd_name = '!say'
                     help_cmd_description = 'Makes the bot print a message.'
                     help_cmd_example = '"!say Hello"'
+                    valid_help_cmd = True
                 elif cmd[1] == 'list_admins':
                     help_cmd_name = '!list_admins'
                     help_cmd_description = 'Lists the current administrators.'
                     help_cmd_example = '"!list_admins"'
+                    valid_help_cmd = True
                 elif cmd[1] == 'seen':
                     help_cmd_name = '!seen'
                     help_cmd_description = 'Prints the last time a user was seen.'
                     help_cmd_example = '"!seen <user>"'
+                    valid_help_cmd = True
                 elif cmd[1] == 'calc':
                     help_cmd_name = '!calc'
                     help_cmd_description = 'Performs basic calculations.'
                     help_cmd_example = '"!calc 2+2"'
+                    valid_help_cmd = True
                 elif cmd[1] == 'insult':
                     help_cmd_name = '!insult'
                     help_cmd_description = 'Prints a random insult.'
                     help_cmd_example = '"!insult"'
+                    valid_help_cmd = True
                 elif cmd[1] == 'rps':
                     help_cmd_name = '!rps'
                     help_cmd_description = 'Begins a game of Rock-Paper-Scissors.'
                     help_cmd_example = '"!rps 0"'
+                    valid_help_cmd = True
                 elif cmd[1] == 'ttt':
                     help_cmd_name = '!ttt'
                     help_cmd_description = 'Begins a game of Tic Tac Toe.'
                     help_cmd_example = '"!ttt 5"'
+                    valid_help_cmd = True
                 elif cmd[1] == 'uptime':
                     help_cmd_name = '!uptime'
                     help_cmd_description = 'Shows how long the bot has been running.'
                     help_cmd_example = '"!uptime"'
-                #returns the description of the given command
-                ret = 'PRIVMSG ' + info[2] + ' :Command:     %-s\n' % (help_cmd_name) + \
-                      'PRIVMSG ' + info[2] + ' :Description: %-s\n' % (help_cmd_description) + \
-                      'PRIVMSG ' + info[2] + ' :Example:     %-s\n' % (help_cmd_example)
+                    valid_help_cmd = True
+                else:
+                    valid_help_cmd = False
+
+                if valid_help_cmd == True:
+                    #returns the description of the given command
+                    ret = 'PRIVMSG ' + info[2] + ' :Command:     %-s\n' % (help_cmd_name) + \
+                          'PRIVMSG ' + info[2] + ' :Description: %-s\n' % (help_cmd_description) + \
+                          'PRIVMSG ' + info[2] + ' :Example:     %-s\n' % (help_cmd_example)
+                else:
+                    ret = 'PRIVMSG ' + info[2] + ' :"!%s" is not a valid command.\n' % (cmd[1])
 
 # The !admin_help command lists commands available only to admins
         if cmd[0] == '!admin_help' and sender in ADMINS:
