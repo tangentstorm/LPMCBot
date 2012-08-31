@@ -336,60 +336,55 @@ def parsemsg(info, msg, sender):
         #List all of the available commands and an example of how to use !help
         if cmd[0] == '!help':
             if len(cmd) == 1:
-                ret = 'PRIVMSG ' + info[2] + ' :Current available commands:\n' + \
-                      'PRIVMSG ' + info[2] + ' :  !say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime\n' + \
-                      'PRIVMSG ' + info[2] + ' :To get further information on a command use "!help <command>".\n' + \
-                      'PRIVMSG ' + info[2] + ' :Example: "!help say"\n'
+                ret = 'PRIVMSG ' + info[2] + \
+                      ' :Current available commands:' + \
+                      ' {!say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime}. ' + \
+                      ' To get further information on a command use "!help <command>". ' + \
+                      ' Example: "!help say"\n'
             else:
+                valid_help_cmd = True
                 #Gives a help description for a specified command
                 if cmd[1] == 'say':
                     help_cmd_name = '!say'
                     help_cmd_description = 'Makes the bot print a message.'
                     help_cmd_example = '"!say Hello"'
-                    valid_help_cmd = True
                 elif cmd[1] == 'list_admins':
                     help_cmd_name = '!list_admins'
                     help_cmd_description = 'Lists the current administrators.'
                     help_cmd_example = '"!list_admins"'
-                    valid_help_cmd = True
                 elif cmd[1] == 'seen':
                     help_cmd_name = '!seen'
                     help_cmd_description = 'Prints the last time a user was seen.'
                     help_cmd_example = '"!seen <user>"'
-                    valid_help_cmd = True
                 elif cmd[1] == 'calc':
                     help_cmd_name = '!calc'
                     help_cmd_description = 'Performs basic calculations.'
                     help_cmd_example = '"!calc 2+2"'
-                    valid_help_cmd = True
                 elif cmd[1] == 'insult':
                     help_cmd_name = '!insult'
                     help_cmd_description = 'Prints a random insult.'
                     help_cmd_example = '"!insult"'
-                    valid_help_cmd = True
                 elif cmd[1] == 'rps':
                     help_cmd_name = '!rps'
                     help_cmd_description = 'Begins a game of Rock-Paper-Scissors.'
                     help_cmd_example = '"!rps 0"'
-                    valid_help_cmd = True
                 elif cmd[1] == 'ttt':
                     help_cmd_name = '!ttt'
                     help_cmd_description = 'Begins a game of Tic Tac Toe.'
                     help_cmd_example = '"!ttt 5"'
-                    valid_help_cmd = True
                 elif cmd[1] == 'uptime':
                     help_cmd_name = '!uptime'
                     help_cmd_description = 'Shows how long the bot has been running.'
                     help_cmd_example = '"!uptime"'
-                    valid_help_cmd = True
                 else:
                     valid_help_cmd = False
 
                 if valid_help_cmd == True:
                     #returns the description of the given command
-                    ret = 'PRIVMSG ' + info[2] + ' :Command:     %-s\n' % (help_cmd_name) + \
-                          'PRIVMSG ' + info[2] + ' :Description: %-s\n' % (help_cmd_description) + \
-                          'PRIVMSG ' + info[2] + ' :Example:     %-s\n' % (help_cmd_example)
+                    ret = 'PRIVMSG ' + info[2] + \
+                          ' :Command: %s' % (help_cmd_name) + \
+                          ' Description: %s' % (help_cmd_description) + \
+                          ' Example: %s\n' % (help_cmd_example)
                 else:
                     ret = 'PRIVMSG ' + info[2] + ' :"!%s" is not a valid command.\n' % (cmd[1])
 
