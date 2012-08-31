@@ -333,18 +333,52 @@ def parsemsg(info, msg, sender):
             str(seconds_passed) + ' seconds.' + '\n'
 
 # The '!help' command lists commands available to users
+        #List all of the available commands and an example of how to use !help
         if cmd[0] == '!help':
-            ret = 'PRIVMSG ' + info[2] + ' :Current available commands:\n' + \
-                  'PRIVMSG ' + info[2] + ' :Command       |Use                                     |Example\n'         + \
-                  'PRIVMSG ' + info[2] + ' ================================================================\n'         + \
-                  'PRIVMSG ' + info[2] + ' :!say          |Makes the bot print a message           |"!say Hello"\n'    + \
-                  'PRIVMSG ' + info[2] + ' :!list_admins  |Lists current administrators            |\n'                + \
-                  'PRIVMSG ' + info[2] + ' :!seen         |Prints last time a user was seen        |"!seen <user>"\n'  + \
-                  'PRIVMSG ' + info[2] + ' :!calc         |Performs basic calculations             |"!calc 2+2"\n'     + \
-                  'PRIVMSG ' + info[2] + ' :!insult       |Prints a random insult                  |\n'                + \
-                  'PRIVMSG ' + info[2] + ' :!rps          |Begins a game of Rock-Paper-Scissors    |"!rps 0"\n'        + \
-                  'PRIVMSG ' + info[2] + ' :!ttt          |Begins a game of tic tac toe            |"!ttt 5"\n'        + \
-                  'PRIVMSG ' + info[2] + ' :!uptime       |Shows how long the bot has been running |\n'
+            if len(cmd) == 1:
+                ret = 'PRIVMSG ' + info[2] + ' :Current available commands:\n' + \
+                      'PRIVMSG ' + info[2] + ' :  !say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime\n' + \
+                      'PRIVMSG ' + info[2] + ' :To get further information on a command use "!help <command>".\n' + \
+                      'PRIVMSG ' + info[2] + ' :Example: "!help say"\n'
+            else:
+                #Gives a help description for a specified command
+                if cmd[1] == 'say':
+                    help_cmd_name = '!say'
+                    help_cmd_description = 'Makes the bot print a message.'
+                    help_cmd_example = '"!say Hello"'
+                elif cmd[1] == 'list_admins':
+                    help_cmd_name = '!list_admins'
+                    help_cmd_description = 'Lists the current administrators.'
+                    help_cmd_example = '"!list_admins"'
+                elif cmd[1] == 'seen':
+                    help_cmd_name = '!seen'
+                    help_cmd_description = 'Prints the last time a user was seen.'
+                    help_cmd_example = '"!seen <user>"'
+                elif cmd[1] == 'calc':
+                    help_cmd_name = '!calc'
+                    help_cmd_description = 'Performs basic calculations.'
+                    help_cmd_example = '"!calc 2+2"'
+                elif cmd[1] == 'insult':
+                    help_cmd_name = '!insult'
+                    help_cmd_description = 'Prints a random insult.'
+                    help_cmd_example = '"!insult"'
+                elif cmd[1] == 'rps':
+                    help_cmd_name = '!rps'
+                    help_cmd_description = 'Begins a game of Rock-Paper-Scissors.'
+                    help_cmd_example = '"!rps 0"'
+                elif cmd[1] == 'ttt':
+                    help_cmd_name = '!ttt'
+                    help_cmd_description = 'Begins a game of Tic Tac Toe.'
+                    help_cmd_example = '"!ttt 5"'
+                elif cmd[1] == 'uptime':
+                    help_cmd_name = '!uptime'
+                    help_cmd_description = 'Shows how long the bot has been running.'
+                    help_cmd_example = '"!uptime"'
+                #returns the description of the given command
+                ret = 'PRIVMSG ' + info[2] + ' :Command:     %-s\n' % (help_cmd_name) + \
+                      'PRIVMSG ' + info[2] + ' :Description: %-s\n' % (help_cmd_description) + \
+                      'PRIVMSG ' + info[2] + ' :Example:     %-s\n' % (help_cmd_example)
+
 # The !admin_help command lists commands available only to admins
         if cmd[0] == '!admin_help' and sender in ADMINS:
             ret = 'PRIVMSG ' + info[2] + ' :Admin only commands:\n'+ \
