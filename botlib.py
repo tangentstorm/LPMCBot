@@ -6,6 +6,7 @@ import re
 import ConfigParser
 import urllib
 import ast
+import requests
 from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
@@ -138,6 +139,16 @@ def parsemsg(info, msg, sender):
             ret = 'PRIVMSG ' + info[2] + \
             ' :Admins:'+ ", ".join(ADMINS) + '\n'
 # --- End Utilities ---
+
+# The !where command returns the location of the user
+        if cmd[0] == '!where':
+            # Make IP extraction more human readable?
+            ip = info[0].split('@')[1].split('-')[:-1] 
+            geo_info = geolookup('.'.join(ip))
+
+            ret = 'PRIVMSG ' + info[2] + \
+                ' :' + sender + ' is located in ' + geo_info['city'] + ', ' + \
+                geo_info['region_code'] +'\n'   
 
 # The !seen commmand returns the last time a user posted
         if cmd[0] == '!seen':
@@ -474,6 +485,16 @@ def lookup(word):
     else:
         return "Definition unavailable"
 
+def geolookup(ip):
+    data_format = "json"
+    try:
+        ip.replace('-', '.')
+        url="http://freegeoip.net/%s/%s" % (data_format, ip)
+        r = requests.get(url)
+        json = r.json
+    except:
+        pass
+    return json       
 
 def setConfig():
     """Return a dict containing bot config values."""
