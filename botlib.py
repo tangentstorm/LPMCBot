@@ -140,15 +140,21 @@ def parsemsg(info, msg, sender):
             ' :Admins:'+ ", ".join(ADMINS) + '\n'
 # --- End Utilities ---
 
-# The !where command returns the location of the user
-        if cmd[0] == '!where':
-            # Make IP extraction more human readable?
-            ip = info[0].split('@')[1].split('-')[:-1] 
-            geo_info = geolookup('.'.join(ip))
-
-            ret = 'PRIVMSG ' + info[2] + \
-                ' :' + sender + ' is located in ' + geo_info['city'] + ', ' + \
-                geo_info['region_code'] +'\n'   
+# The !weather command returns the weather for a zip/postal code
+        if cmd[0] == '!weather':
+            ret = 'PRIVMSG ' + info[2] + ' :'
+            if len(cmd) > 1:
+                weather = weatherlookup(cmd[1])                    
+                try:
+                    temp_f = weather['data']['current_condition'][0]['temp_F']
+                    temp_c = weather['data']['current_condition'][0]['temp_C']
+                    ret += 'The current temperature in ' + cmd[1] + ' is ' + \
+                        temp_f + 'F/' + \
+                        temp_c + 'C.\n'
+                except KeyError:
+                    ret += 'Could not find weather information. Make sure you entered a valid zip code\n'
+            else:
+                ret += 'Command help: Please specify a zip code\n'
 
 # The !seen commmand returns the last time a user posted
         if cmd[0] == '!seen':
@@ -485,16 +491,14 @@ def lookup(word):
     else:
         return "Definition unavailable"
 
-def geolookup(ip):
-    data_format = "json"
+def weatherlookup(code):
     try:
-        ip.replace('-', '.')
-        url="http://freegeoip.net/%s/%s" % (data_format, ip)
+        url="http://free.worldweatheronline.com/feed/weather.ashx?q=" + code + "&format=json&num_of_days=2&key=67cd8f4a2f184852121809"
+        print url
         r = requests.get(url)
-        json = r.json
+        return r.json
     except:
-        pass
-    return json       
+        return
 
 def setConfig():
     """Return a dict containing bot config values."""
