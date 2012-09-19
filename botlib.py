@@ -494,7 +494,6 @@ def lookup(word):
 def weatherlookup(code):
     try:
         url="http://free.worldweatheronline.com/feed/weather.ashx?q=" + code + "&format=json&num_of_days=2&key=67cd8f4a2f184852121809"
-        print url
         page = urllib.urlopen(url)
         data = json.loads(page.read())
         return data
