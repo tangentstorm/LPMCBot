@@ -6,7 +6,7 @@ import re
 import ConfigParser
 import urllib
 import ast
-import requests
+import json
 from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
@@ -144,7 +144,7 @@ def parsemsg(info, msg, sender):
         if cmd[0] == '!weather':
             ret = 'PRIVMSG ' + info[2] + ' :'
             if len(cmd) > 1:
-                weather = weatherlookup(cmd[1])                    
+                weather = weatherlookup(cmd[1])                 
                 try:
                     temp_f = weather['data']['current_condition'][0]['temp_F']
                     temp_c = weather['data']['current_condition'][0]['temp_C']
@@ -495,8 +495,9 @@ def weatherlookup(code):
     try:
         url="http://free.worldweatheronline.com/feed/weather.ashx?q=" + code + "&format=json&num_of_days=2&key=67cd8f4a2f184852121809"
         print url
-        r = requests.get(url)
-        return r.json
+        page = urllib.urlopen(url)
+        data = json.loads(page.read())
+        return data
     except:
         return
 
