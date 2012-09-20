@@ -152,9 +152,9 @@ def parsemsg(info, msg, sender):
                         temp_f + 'F/' + \
                         temp_c + 'C.\n'
                 except KeyError:
-                    ret += 'Could not find weather information. Make sure you entered a valid zip code\n'
+                    ret += 'Could not find weather information. Make sure you entered a valid zip code, city, state or country.\n'
             else:
-                ret += 'Command help: Please specify a zip code\n'
+                ret += 'Command help: Please specify a zip code, city, state or country.\n'
 
 # The !seen commmand returns the last time a user posted
         if cmd[0] == '!seen':
@@ -355,7 +355,7 @@ def parsemsg(info, msg, sender):
             if len(cmd) == 1:
                 ret = 'PRIVMSG ' + info[2] + \
                       ' :Current available commands:' + \
-                      ' {!say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime} ' + \
+                      ' {!say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime, !weather} ' + \
                       ' To get further information on a command use "!help <command>". ' + \
                       ' Example: "!help say"\n'
             else:
