@@ -6,6 +6,7 @@ import re
 import ConfigParser
 import urllib
 import ast
+import json
 from sys import argv, exc_info
 from os import environ, makedirs
 from math import *
@@ -138,6 +139,22 @@ def parsemsg(info, msg, sender):
             ret = 'PRIVMSG ' + info[2] + \
             ' :Admins:'+ ", ".join(ADMINS) + '\n'
 # --- End Utilities ---
+
+# The !weather command returns the weather for a zip/postal code
+        if cmd[0] == '!weather':
+            ret = 'PRIVMSG ' + info[2] + ' :'
+            if len(cmd) > 1:
+                weather = weatherlookup(cmd[1])                 
+                try:
+                    temp_f = weather['data']['current_condition'][0]['temp_F']
+                    temp_c = weather['data']['current_condition'][0]['temp_C']
+                    ret += 'The current temperature in ' + cmd[1] + ' is ' + \
+                        temp_f + 'F/' + \
+                        temp_c + 'C.\n'
+                except KeyError:
+                    ret += 'Could not find weather information. Make sure you entered a valid zip code, city, state or country.\n'
+            else:
+                ret += 'Command help: Please specify a zip code, city, state or country.\n'
 
 # The !seen commmand returns the last time a user posted
         if cmd[0] == '!seen':
@@ -338,7 +355,7 @@ def parsemsg(info, msg, sender):
             if len(cmd) == 1:
                 ret = 'PRIVMSG ' + info[2] + \
                       ' :Current available commands:' + \
-                      ' {!say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime} ' + \
+                      ' {!say, !list_admins, !seen, !calc, !insult, !rps, !ttt, !uptime, !weather} ' + \
                       ' To get further information on a command use "!help <command>". ' + \
                       ' Example: "!help say"\n'
             else:
@@ -474,6 +491,14 @@ def lookup(word):
     else:
         return "Definition unavailable"
 
+def weatherlookup(code):
+    try:
+        url="http://free.worldweatheronline.com/feed/weather.ashx?q=" + code + "&format=json&num_of_days=2&key=67cd8f4a2f184852121809"
+        page = urllib.urlopen(url)
+        data = json.loads(page.read())
+        return data
+    except:
+        return
 
 def setConfig():
     """Return a dict containing bot config values."""
